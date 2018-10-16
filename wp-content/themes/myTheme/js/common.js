@@ -30,14 +30,22 @@ var getPageName = function(){
 var Ajax = function(){
     var ignoreString = ['#','/wp-','.pdf','.zip','.rar'];
     var main = document.querySelector('main');
+    var done = false;
 
     var onClick = function(event, _this){
         event.preventDefault();
 
         var href = _this.href;
 
-        print('Current Page','#adad25',getPageName());
+        print('','','');
+        CurrentPage = getPageName();
+        print('Current Page','#666',CurrentPage);
+
         updateURL(href);
+
+        ToPage = getPageName();
+        print('Going to','#59bb59',ToPage);
+
         runAjax(href);
     }
 
@@ -50,28 +58,40 @@ var Ajax = function(){
         }
     }
 
-    var runAjax = function(href,getFrom,insertTo,onComplete){
+    var runAjax = function(href,getFrom,insertTo){
         if(checkIgnoreString(href)){
-            print('Start Ajax','#59bb59');
-            print('Going to','#59bb59',getPageName());
-            axios
-                .get(href)
-                .then(function(response){
-                    print('Ajax Success','green');
+            if(checkSamePage()){
+                done = false;
 
-                    var data = response.data,
-                        html = getPageContent(data,getFrom);
+                print('Start Ajax','#59bb59',href);
+                axios
+                    .get(href)
+                    .then(function(response){
+                        print('Ajax Success','green');
 
-                    if(!getFrom)
-                        updateSiteTitle(data);
-                    insertHTML(html,insertTo);
+                        var data = response.data,
+                            html = getPageContent(data,getFrom);
 
-                    if(onComplete) onComplete();
-                })
-                .catch(function(error){
-                    print(error.message,'red',error.stack);
-                });
+                        if(!getFrom)
+                            updateSiteTitle(data);
+                        insertHTML(html,insertTo);
+
+                        if(!done) onComplete();
+                    })
+                    .catch(function(error){
+                        print(error.message,'red',error.stack);
+                    });
+            }
         }
+    }
+
+    var checkSamePage = function(){
+        if(CurrentPage == ToPage){
+            print('Page Detect','red', 'Clicked a Same Page!');
+            return false;
+        }
+
+        return true;
     }
 
     var checkIgnoreString = function(url){
@@ -137,8 +157,11 @@ var Ajax = function(){
         });
     }
 
+
     return{
-        get: runAjax
+        get: runAjax,
+        done: done,
+        setDone: function(){ done = true; }
     }
 }
 
@@ -146,13 +169,23 @@ var Ajax = function(){
 
 
 var CurrentPage = getPageName();
+var ToPage = '';
+print('Current Page','#666',CurrentPage);
 
 var ajax = new Ajax();
-if(CurrentPage == 'home'){
-    ajax.get('/wpstarter/about/','content','featured_about',function(){console.log(1233)}); // url, get from(id), insert to(id), callback
+var onComplete = function(){
+    if(!ajax.done){
+        var page = (ToPage)? ToPage : CurrentPage;
+        if(page == 'home'){
+            // get specify content from other page
+            ajax.get('/wpstarter/about/','content','featured_about'); // url, get from(id), insert to(id), callback
+        }
+        else if(page == 'about'){
+        }
+        ajax.setDone();
+    }
 }
-else if(CurrentPage == 'about'){
-}
+onComplete();
 
 
 

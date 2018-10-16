@@ -175,7 +175,6 @@ var smoothScroll = function(elem, scrollFunc){
     var refresh = function() {
 		if(elem.parentNode != null) 
 			elemHeight = elem.getBoundingClientRect().height - elem.parentNode.offsetHeight;
-		
 	}
 	
 	var isOn = false;
