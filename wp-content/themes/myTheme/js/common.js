@@ -32,6 +32,13 @@ var Ajax = function(){
     var main = document.querySelector('main');
     var done = false;
 
+    var a = document.querySelectorAll('a.page');
+    for(var i=0; a[i]; i++){
+        addEvent(a[i], 'click', function(event){
+            onClick(event, this);
+        });
+    }
+    
     var onClick = function(event, _this){
         event.preventDefault();
 
@@ -138,23 +145,16 @@ var Ajax = function(){
     }
 
     var insertHTML = function(html,insertTo){
-        var elem;
-        var _e = document.querySelector('#'+insertTo);
+        var elem,
+            i = document.querySelector('#'+insertTo);
 
-        if(_e)
-            elem = _e;
+        if(i)
+            elem = i;
         else
             elem = main;
 
         elem.innerHTML = html;
         initEventToAtag(elem);
-    }
-
-    var a = document.querySelectorAll('a.page');
-    for(var i=0; a[i]; i++){
-        addEvent(a[i], 'click', function(event){
-            onClick(event, this);
-        });
     }
 
 
