@@ -17,6 +17,7 @@
 get_header(); ?>
 
 	<main>
+		<a class="page" href="<?php echo home_url('/'); ?>">home</a>
 		<a class="page" href="<?php echo home_url('/about/'); ?>">about</a>
 		<br/>
 		home123	

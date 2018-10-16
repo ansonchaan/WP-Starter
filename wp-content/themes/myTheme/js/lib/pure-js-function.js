@@ -267,5 +267,156 @@ var isAllDone = function( idx , lth ){
 
 var print = function(state, color, text){
 	var text = (typeof text == 'object')? JSON.stringify(text) : text || '';
-	return console.log('%c'+state+'%c %s','color:white;background:'+color+';padding:3px 4px 2px 3px;border-radius:3px','',text);
+	return console.log('%c'+state+'%c %s','color:white;background:'+color+';padding:3px 4px 2px 3px;border-radius:3px;','',text);
+}
+
+
+
+
+
+//
+// init Ajax
+//
+var getPageName = function(){
+    var page = window.location.pathname.split('/').filter(Boolean)[1];
+    return (page)? page : 'home';
+}
+var Ajax = function(){
+    var ignoreString = ['#','/wp-','.pdf','.zip','.rar'];
+    var main = document.querySelector('main');
+    var done = false;
+
+	var initEventToAtag = function(elem){
+        var a = elem.querySelectorAll('a.page');
+        for(var i=0; a[i]; i++){
+            addEvent(a[i], 'click', function(event){
+                onClick(event, this.href);
+            });
+        }
+    }
+	initEventToAtag(document);
+    
+    var onClick = function(event, href){
+        event.preventDefault();
+
+        print('','','');
+		print('Current Page','#999',CurrentPage);
+		
+		updateURL(href);
+
+        ToPage = getPageName();
+		print('Going to','#999',ToPage);
+
+        runAjax(href);
+	}
+
+    var runAjax = function(href, getFrom, insertTo, callback){
+        if(checkIgnoreString(href)){
+			var ignoreDetection = getFrom && insertTo;
+
+            if(checkIfSamePage(ignoreDetection)){
+                done = false;
+
+                print('Start Ajax','#999',href);
+                axios
+                    .get(href)
+                    .then(function(response){
+						print('Ajax Success','green');
+						CurrentPage = getPageName();
+
+                        var data = response.data,
+                            html = getPageContent(data,getFrom);
+
+                        if(!getFrom)
+                            updateSiteTitle(data);
+						insertHTML(html,insertTo);
+
+                        if(callback) callback();
+                        if(!done) onComplete();
+                    })
+                    .catch(function(error){
+                        print(error.message,'red',error.stack);
+                    });
+            }
+        }
+    }
+
+    var checkIfSamePage = function(ignore){
+		if(!ignore){
+			if(CurrentPage == ToPage){
+				print('Page Detection','red', 'Clicked a Same Page!');
+				return false;
+			}
+		}
+
+        return true;
+    }
+
+    var checkIgnoreString = function(url){
+        for(var i=0; ignoreString[i]; i++){
+            if (url.indexOf(ignoreString[i]) >= 0) {
+                print('Ignore URL','red',url);
+                return false;
+            }
+		}
+		
+        return true;
+    }
+
+    var getPageContent = function(data, getFrom){
+        if(!getFrom)
+            data = data.split('<main>')[1].split('</main>')[0];
+        else{
+            var temp = document.createElement('div');
+            temp.innerHTML = data;
+            data = temp.querySelector('#'+getFrom).outerHTML;
+            temp = null;
+        }
+
+        return data;
+    }
+
+    var getSiteTitle = function(data){
+        data = data.split('<title>')[1].split('</title>')[0];
+        return data;
+    }
+    var updateSiteTitle = function(data){
+        document.querySelector('title').innerHTML = getSiteTitle(data);
+    }
+
+    var updateURL = function(href){
+        var nohttp = href.replace("http://","").replace("https://","");
+        var firstsla = nohttp.indexOf("/");
+        var pathpos = href.indexOf(nohttp);
+        var path = href.substring(pathpos + firstsla);
+
+        if (typeof window.history.pushState == "function") {
+            var stateObj = { foo: 1000 + Math.random()*1001 };
+            history.pushState(stateObj,'ajax', path);
+        }
+    }
+
+    var insertHTML = function(html, insertTo){
+        var elem,
+            to = document.querySelector('#'+insertTo);
+
+        (to)? elem = to : elem = main;
+
+        to = null;
+        elem.innerHTML = html;
+        initEventToAtag(elem);
+	}
+	
+	window.onpopstate = function(event) {
+		var url = document.location.toString();
+		print('Back to','black',url);
+		onClick(event,url);
+	}
+
+
+    return{
+        get: runAjax,
+        done: done,
+        setDone: function(){ done = true; }
+    }
 }
