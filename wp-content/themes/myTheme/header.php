@@ -29,9 +29,7 @@
 	<meta property="og:site_name" content="<?php echo bloginfo('name'); ?>"/>
 	<meta property="og:description" content=""/> -->
 	<?
-	wp_enqueue_style('fonts', get_template_directory_uri().'/css/fonts.css', array(), null, 'all');
-	wp_enqueue_style('reset', get_template_directory_uri().'/css/reset.css', array(), null, 'all');
-	wp_enqueue_style('style', get_template_directory_uri().'/css/style.css', array(), null, 'all');
+	wp_enqueue_style('style', get_template_directory_uri().'/css/style.min.css', array(), null, 'all');
 	// wp_enqueue_script( 'jquery.min' , get_template_directory_uri() . '/js/plugin/jquery.min.js' );
 	?>
 	<?php wp_head(); ?>
