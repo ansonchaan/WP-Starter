@@ -1,14 +1,16 @@
-## Get started (npm 5.2+ and higher)
+### Get started (npm 5.2+ and higher)
 ```
-cd (PASTE THE PATH OF THEME)
-npm start
+$ cd PASTE_THE_PATH_OF_THEME
+$ npm start
 ```
 
-## Ajax Usage
+### Ajax Usage
 ```
-ajax.get(url, get from(DOM Id), insert to(DOM Id), callback)
+ajax.get(url, get from (DOM Id), insert to (DOM Id), callback)
 ```
+
 
 ### Source
 Axios - [https://github.com/axios/axios](https://github.com/axios/axios)
+
 Gulp - [https://github.com/ahmadawais/WPGulp](https://github.com/ahmadawais/WPGulp)
