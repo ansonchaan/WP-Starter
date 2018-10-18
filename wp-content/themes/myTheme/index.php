@@ -20,7 +20,8 @@ get_header(); ?>
 		<a class="page" href="<?php echo home_url('/'); ?>">home</a>
 		<a class="page" href="<?php echo home_url('/about/'); ?>">about</a>
 		<br/>
-		home123	
+		This is home page
+		<br/><br/>
 		<div id="featured_about"></div>
 	</main>
 	
