@@ -592,3 +592,11 @@ function do_mobile_detect() {
 	);
 }
 add_action( 'get_header', 'do_mobile_detect' );
+
+
+function do_browser_detect() {
+	require_once 'detection/Browser_Detect.php';
+	global $ua;
+	$ua = getBrowser();
+}
+add_action( 'get_header', 'do_browser_detect' );
