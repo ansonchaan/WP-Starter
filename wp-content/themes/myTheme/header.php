@@ -1,7 +1,6 @@
 <?php
-	require_once 'detection/Mobile_Detect.php';
-	$detect = new Mobile_Detect;
-	
+	global $mobileDetect;
+
 	require_once 'detection/Browser_Detect.php';
 	$ua=getBrowser();
 	$yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
@@ -14,7 +13,7 @@
 <html class="ie ie8" <?php language_attributes(); ?>>
 <![endif]-->
 <!--[if !(IE 7) | !(IE 8)  ]><!-->
-<html <?php language_attributes(); ?> class="<?echo $ua['name'];?><?if($ua['name']=='IE')echo ' '.$ua['name'].$ua['version'];?><?if($detect->isMobile()):if(strpos($ua['userAgent'],'CriOS')):?> mobileChrome<?else:?> mobileSafari<?endif;endif;?>">
+<html <?php language_attributes(); ?> class="<?echo $ua['name'];?><?if($ua['name']=='IE')echo ' '.$ua['name'].$ua['version'];?><?if($mobileDetect->isMobile):if(strpos($ua['userAgent'],'CriOS')):?> mobileChrome<?else:?> mobileSafari<?endif;endif;?>">
 <!--<![endif]-->
 	<head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />

@@ -580,3 +580,15 @@ if(!is_admin()){
 		return "$url' defer='defer";
 	}, 11, 1 );
 }
+
+
+function do_mobile_detect() {
+	require_once 'detection/Mobile_Detect.php';
+	$detect = new Mobile_Detect;
+ 	global $mobileDetect;
+	$mobileDetect = (object) array(
+		'isMobile' => $detect->isMobile(),
+		'isTablet' => $detect->isTablet(),
+	);
+}
+add_action( 'get_header', 'do_mobile_detect' );
