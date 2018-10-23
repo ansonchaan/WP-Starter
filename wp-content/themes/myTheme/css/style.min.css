@@ -8,38 +8,12 @@ table{border-collapse:collapse;border-spacing:0}
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
 .clearfix{*zoom:1}
 *{-webkit-text-size-adjust:none}
-.ease{-webkit-transition:all 320ms cubic-bezier(0.23,1,0.38,0.98);transition:all 320ms cubic-bezier(0.23,1,0.38,0.98)}
-.easeInSine{-webkit-transition:all 600ms cubic-bezier(0.47,0,0.745,0.715);transition:all 600ms cubic-bezier(0.47,0,0.745,0.715)}
-.easeOutSine{-webkit-transition:all 600ms cubic-bezier(0.39,0.575,0.565,1);transition:all 600ms cubic-bezier(0.39,0.575,0.565,1)}
-.easeInOutSine{-webkit-transition:all 600ms cubic-bezier(0.445,0.05,0.55,0.95);transition:all 600ms cubic-bezier(0.445,0.05,0.55,0.95)}
-.easeInQuad{-webkit-transition:all 600ms cubic-bezier(0.55,0.085,0.68,0.53);transition:all 600ms cubic-bezier(0.55,0.085,0.68,0.53)}
-.easeOutQuad{-webkit-transition:all 600ms cubic-bezier(0.25,0.46,0.45,0.94);transition:all 600ms cubic-bezier(0.25,0.46,0.45,0.94)}
-.easeInOutQuad{-webkit-transition:all 600ms cubic-bezier(0.455,0.03,0.515,0.955);transition:all 600ms cubic-bezier(0.455,0.03,0.515,0.955)}
-.easeInCubic{-webkit-transition:all 600ms cubic-bezier(0.55,0.055,0.675,0.19);transition:all 600ms cubic-bezier(0.55,0.055,0.675,0.19)}
-.easeOutCubic{-webkit-transition:all 600ms cubic-bezier(0.215,0.61,0.355,1);transition:all 600ms cubic-bezier(0.215,0.61,0.355,1)}
-.easeInOutCubic{-webkit-transition:all 600ms cubic-bezier(0.645,0.045,0.355,1);transition:all 600ms cubic-bezier(0.645,0.045,0.355,1)}
-.easeInQuart{-webkit-transition:all 600ms cubic-bezier(0.895,0.03,0.685,0.22);transition:all 600ms cubic-bezier(0.895,0.03,0.685,0.22)}
-.easeOutQuart{-webkit-transition:all 600ms cubic-bezier(0.165,0.84,0.44,1);transition:all 600ms cubic-bezier(0.165,0.84,0.44,1)}
-.easeInOutQuart{-webkit-transition:all 600ms cubic-bezier(0.77,0,0.175,1);transition:all 600ms cubic-bezier(0.77,0,0.175,1)}
-.easeInQuint{-webkit-transition:all 600ms cubic-bezier(0.755,0.05,0.855,0.06);transition:all 600ms cubic-bezier(0.755,0.05,0.855,0.06)}
-.easeOutQuint{-webkit-transition:all 600ms cubic-bezier(0.23,1,0.32,1);transition:all 600ms cubic-bezier(0.23,1,0.32,1)}
-.easeInOutQuint{-webkit-transition:all 600ms cubic-bezier(0.86,0,0.07,1);transition:all 600ms cubic-bezier(0.86,0,0.07,1)}
-.easeInExpo{-webkit-transition:all 600ms cubic-bezier(0.95,0.05,0.795,0.035);transition:all 600ms cubic-bezier(0.95,0.05,0.795,0.035)}
-.easeOutExpo{-webkit-transition:all 600ms cubic-bezier(0.19,1,0.22,1);transition:all 600ms cubic-bezier(0.19,1,0.22,1)}
-.easeInOutExpo{-webkit-transition:all 600ms cubic-bezier(1,0,0,1);transition:all 600ms cubic-bezier(1,0,0,1)}
-.easeInCirc{-webkit-transition:all 600ms cubic-bezier(0.6,0.04,0.98,0.335);transition:all 600ms cubic-bezier(0.6,0.04,0.98,0.335)}
-.easeOutCirc{-webkit-transition:all 600ms cubic-bezier(0.075,0.82,0.165,1);transition:all 600ms cubic-bezier(0.075,0.82,0.165,1)}
-.easeInOutCirc{-webkit-transition:all 600ms cubic-bezier(0.785,0.135,0.15,0.86);transition:all 600ms cubic-bezier(0.785,0.135,0.15,0.86)}
-.easeInBack{-webkit-transition:all 600ms cubic-bezier(0.6,-0.28,0.735,0.045);transition:all 600ms cubic-bezier(0.6,-0.28,0.735,0.045)}
-.easeOutBack{-webkit-transition:all 600ms cubic-bezier(0.175,0.885,0.32,1.275);transition:all 600ms cubic-bezier(0.175,0.885,0.32,1.275)}
-.easeInOutBack{-webkit-transition:all 600ms cubic-bezier(0.68,-0.55,0.265,1.55);transition:all 600ms cubic-bezier(0.68,-0.55,0.265,1.55)}
 @font-face{font-family:'TecoSansStencil';src:url("../fonts/TecoSansStencil.eot");src:url("../fonts/TecoSansStencil.eot?#iefix") format("embedded-opentype"),url("../fonts/TecoSansStencil.woff") format("woff"),url("../fonts/TecoSansStencil.ttf") format("truetype"),url("../fonts/TecoSansStencil.svg#d6eae7a12a8d60651ae3073d0b497b4a") format("svg");font-style:normal;font-weight:400}
 @font-face{font-family:'TecoSansStencil Light';src:url("../fonts/TecoSansStencil-Light-Light.eot");src:url("../fonts/TecoSansStencil-Light-Light.eot?#iefix") format("embedded-opentype"),url("../fonts/TecoSansStencil-Light-Light.woff") format("woff"),url("../fonts/TecoSansStencil-Light-Light.ttf") format("truetype"),url("../fonts/TecoSansStencil-Light-Light.svg#c9851e21217aa63c5485106c292b0355") format("svg");font-style:normal;font-weight:200}
 *{-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:rgba(0,0,0,0)}
-html,body{width:100%;height:100%}
+html,body{width:100%;height:100%;overflow:hidden}
 body{width:100%;height:100%;font-family:"TecoSansStencil"}
 body .body_wrap{width:100%;height:100%}
-.main{width:100%;height:100%}
 .floatL{float:left}
 .floatR{float:right}
 .alignC{text-align:center}
@@ -53,9 +27,6 @@ body .body_wrap{width:100%;height:100%}
 .underline{text-decoration:underline}
 .show_on_desktop{display:block}
 .show_on_mobile{display:none}
-.fade{opacity:0;visibility:visible}
-#ajax{width:100%;height:100%;position:relative;opacity:1;-webkit-transition:opacity 1000ms cubic-bezier(0.19,1,0.22,1);transition:opacity 1000ms cubic-bezier(0.19,1,0.22,1)}
-#ajax.fade{opacity:0}
 a{text-decoration:none;display:inline-block}
 span{display:inline-block}
 img{width:100%;height:auto}
@@ -68,7 +39,15 @@ input[type="submit"]{cursor:pointer}
 :-moz-placeholder{color:red}
 ::-moz-placeholder{color:red}
 :-ms-input-placeholder{color:red}
-#main_wrap.hide{opacity:0;visibility:hidden}
+#scrollBarWrap{width:10px;height:100vh;position:absolute;top:0;right:0;-webkit-animation:fadeIn .3s ease;animation:fadeIn .3s ease}
+#scrollBarWrap #scrollBar{width:8px;height:auto;background:rgba(0,0,0,0.3);border-radius:5px;position:absolute;top:0;right:1px;-webkit-transition:all 300ms cubic-bezier(0.215,0.61,0.355,1);transition:all 300ms cubic-bezier(0.215,0.61,0.355,1)}
+#scrollBarWrap #scrollBar:hover{background:rgba(0,0,0,0.6)}
+#mainWrap.hide{opacity:0;visibility:hidden}
 .about{color:#fff}
 .IE{height:100%;overflow-y:auto;overflow-x:hidden}
 .IE body{height:100%;overflow:scroll;overflow-x:hidden}
+@-webkit-keyframes fadeIn{from{opacity:0}
+to{opacity:1}
+}@keyframes fadeIn{from{opacity:0}
+to{opacity:1}
+}

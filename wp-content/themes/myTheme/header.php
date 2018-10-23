@@ -19,14 +19,10 @@
 	<meta property="og:description" content=""/> -->
 	<?
 	wp_enqueue_style('style', get_template_directory_uri().'/css/style.min.css', array(), null, 'all');
-	// wp_enqueue_script( 'jquery.min' , get_template_directory_uri() . '/js/plugin/jquery.min.js' );
 	?>
 	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
-	<div class="body_wrap">
 
-
-		
-		<?php wp_reset_query(); ?>
+<?php wp_reset_query(); ?>

@@ -17,13 +17,13 @@
 get_header(); ?>
 
 	<main>
-		<div id="main_wrap">
+		<div id="mainWrap">
 			<a class="page" href="<?php echo home_url('/'); ?>">home</a>
 			<a class="page" href="<?php echo home_url('/about/'); ?>">about</a>
 			<br/>
 			This is home page
 			<br/><br/>
-			<div id="featured_about"></div>
+			<div id="featured_about" style="height: 200vh;"></div>
 		</div>
 	</main>
 	

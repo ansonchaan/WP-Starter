@@ -122,8 +122,8 @@ var smoothScroll = function(elem, scrollFunc){
     var elemHeight = elem.getBoundingClientRect().height - window.innerHeight;
 
     // Add easing to the scroll. Play with this value to find a setting that you like.
-    var ease = 0.1;
-    var mult = .7;
+    var ease = 0.3;
+    var mult = 1;
 	
     // Store current scroll position
     var targetX = 0, targetY = 0;
@@ -150,12 +150,6 @@ var smoothScroll = function(elem, scrollFunc){
 
         // Uncomment this line to scroll horizontally
         // currentX += (targetX - currentX) * ease;
-
-        // Create the CSS transform string
-        //
-        // alternativly: use WebKitCSSMatrix, 
-        // though it doesn't seem to be any faster 
-        // http://jsperf.com/webkitcssmatrix-vs-translate3d
         
         // Apply CSS style
         setTranslate( elem , currentX.toFixed(4) +'px' , currentY.toFixed(4) +'px' , 0+'px' );
@@ -163,9 +157,34 @@ var smoothScroll = function(elem, scrollFunc){
 		refresh();
 
         if( scrollFunc )
-        	scrollFunc( currentY / elemHeight , currentY , elemHeight );
-		
-    }
+			scrollFunc( currentY / elemHeight , currentY , elemHeight );
+			
+		rePositionScrollBar(currentY / elemHeight, currentY);
+	}
+	
+	var initScrollBar = function(){
+		this.scrollBarWrap = document.createElement('div');
+		this.scrollBar = document.createElement('div');
+
+		this.scrollBarWrap.setAttribute('id','scrollBarWrap');
+		this.scrollBar.setAttribute('id','scrollBar');
+
+		this.scrollBarWrap.appendChild(this.scrollBar);
+		elem.appendChild(this.scrollBarWrap);
+	}
+
+	var rePositionScrollBar = function(s, y){
+		var scrollBarHeight = window.innerHeight/elemHeight*100;
+		scrollBar.style.height = scrollBarHeight + '%';
+		var scrollBarY = (window.innerHeight - this.scrollBar.offsetHeight) * (y/elemHeight);
+
+		setTranslate( this.scrollBarWrap , 0+'px' , (-y.toFixed(4)) +'px' , 0+'px' );
+		setTranslate( this.scrollBar , 0+'px' , (-scrollBarY.toFixed(4)) +'px' , 0+'px' );
+	}
+
+
+
+
     
     var reset = function(){
 	    currentY = 0;
@@ -181,6 +200,7 @@ var smoothScroll = function(elem, scrollFunc){
 	var on = function(){
 		isOn = true;
 		refresh();
+		initScrollBar();
 		VirtualScroll.on(onScroll);
 		FrameImpulse.on(onAnim);
 	}
@@ -277,7 +297,7 @@ var print = function(state, color, text){
 //
 // init Ajax
 //
-var mainWrapId = '#main_wrap';
+var mainWrapId = '#mainWrap';
 var getPageName = function(){
     var page = window.location.pathname.split('/').filter(Boolean)[1];
     return (page)? page : 'home';
