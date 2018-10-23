@@ -68,6 +68,7 @@ input[type="submit"]{cursor:pointer}
 :-moz-placeholder{color:red}
 ::-moz-placeholder{color:red}
 :-ms-input-placeholder{color:red}
+#main_wrap.hide{opacity:0;visibility:hidden}
 .about{color:#fff}
 .IE{height:100%;overflow-y:auto;overflow-x:hidden}
 .IE body{height:100%;overflow:scroll;overflow-x:hidden}

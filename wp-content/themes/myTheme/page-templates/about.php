@@ -15,13 +15,15 @@
 get_header(); ?>
 
 	<main>
-		<a class="page" href="<?php echo home_url('/'); ?>">home</a>
-		<a class="page" href="<?php echo home_url('/about/'); ?>">about</a>
-		<br/>
-		This is about page
-		<br/><br/>
-		<div>about content 01.</div>
-		<div id="content">about content 02.</div>
+		<div id="main_wrap">
+			<a class="page" href="<?php echo home_url('/'); ?>">home</a>
+			<a class="page" href="<?php echo home_url('/about/'); ?>">about</a>
+			<br/>
+			This is about page
+			<br/><br/>
+			<div>about content 01.</div>
+			<div id="content">about content 02.</div>
+		</div>
 	</main>
 
 <?php get_footer(); ?>

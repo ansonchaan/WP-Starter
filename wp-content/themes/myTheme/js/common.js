@@ -30,27 +30,24 @@ var ToPage = '';
 print('Current Page','#999',CurrentPage);
 
 var ajax = new Ajax();
-var onComplete = function(){
-    if(!ajax.done){
-        var page = (ToPage)? ToPage : CurrentPage;
-        
-        if(page == 'home'){
-            // get specify content from other page
-            // ajax.get(url, get from(id), insert to(id), callback)
-            ajax.get('/wpstarter/about/','content','featured_about',
-                function(){
-                    home.initFeaturedAbout();
-                }
-            );
-            home.init();
-        }
-        else if(page == 'about'){
-            about.init();
-        }
-        ajax.setDone();
+var initPage = function(){
+    var page = (ToPage)? ToPage : CurrentPage;
+    
+    if(page == 'home'){
+        // get specify content from other page
+        // ajax.get(url, get from(id), insert to(id), callback)
+        ajax.get('/wpstarter/about/','content','featured_about',
+            function(){
+                home.initFeaturedAbout();
+            }
+        );
+        home.init();
+    }
+    else if(page == 'about'){
+        about.init();
     }
 }
-onComplete();
+initPage();
 
 
 

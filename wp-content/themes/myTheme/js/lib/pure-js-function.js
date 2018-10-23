@@ -277,6 +277,7 @@ var print = function(state, color, text){
 //
 // init Ajax
 //
+var mainWrapId = '#main_wrap';
 var getPageName = function(){
     var page = window.location.pathname.split('/').filter(Boolean)[1];
     return (page)? page : 'home';
@@ -284,7 +285,7 @@ var getPageName = function(){
 var Ajax = function(){
     var ignoreString = ['#','/wp-','.pdf','.zip','.rar'];
     var main = document.querySelector('main');
-    var done = false;
+    var done = true;
 
 	var initEventToAtag = function(elem){
         var a = elem.querySelectorAll('a.page');
@@ -307,39 +308,63 @@ var Ajax = function(){
         ToPage = getPageName();
 		print('Going to','#999',ToPage);
 
-        runAjax(href);
+		runAjax(href);
 	}
+
 
     var runAjax = function(href, getFrom, insertTo, callback){
         if(checkIgnoreString(href)){
 			var ignoreDetection = getFrom && insertTo;
 
             if(checkIfSamePage(ignoreDetection)){
-                done = false;
+                if(!ignoreDetection) done = false;
 
-                print('Start Ajax','#999',href);
-                axios
-                    .get(href)
-                    .then(function(response){
-						print('Ajax Success','green');
-						CurrentPage = getPageName();
+				print('Start Ajax','#999',href);
+				
+				onAnimBeforeAjax(getFrom,function(){
+					axios
+						.get(href)
+						.then(function(response){
+							print('Ajax Success','green');
+							CurrentPage = getPageName();
 
-                        var data = response.data,
-                            html = getPageContent(data,getFrom);
+							var data = response.data,
+								html = getPageContent(data,getFrom);
 
-                        if(!getFrom)
-                            updateSiteTitle(data);
-						insertHTML(html,insertTo);
+							if(!getFrom)
+								updateSiteTitle(data);
+							insertHTML(html,insertTo);
 
-                        if(callback) callback();
-                        if(!done) onComplete();
-                    })
-                    .catch(function(error){
-                        print(error.message,'red',error.stack);
-                    });
+							onAnimAfterAjax();
+
+							if(callback) callback();
+							if(!done){
+								done = true;
+								initPage();
+							}
+						})
+						.catch(function(error){
+							print(error.message,'red',error.stack);
+						});
+				});
             }
         }
-    }
+	}
+	
+	var onAnimBeforeAjax = function(getFrom, func){
+		if(!getFrom)
+			TweenMax.to(mainWrapId,.3,{autoAlpha:0,
+				onComplete:function(){
+					func();
+				}
+			});
+		else
+			func();
+	}
+
+	var onAnimAfterAjax = function(){
+        TweenMax.to(mainWrapId,.3,{autoAlpha:1});
+	}
 
     var checkIfSamePage = function(ignore){
 		if(!ignore){
@@ -400,7 +425,17 @@ var Ajax = function(){
         var elem,
             to = document.querySelector('#'+insertTo);
 
-        (to)? elem = to : elem = main;
+        if(to){
+			elem = to;
+		}else{
+			elem = main;
+
+			// add "hide" class after ajax
+			var temp = document.createElement('div');
+            temp.innerHTML = html;
+			addClass(temp.querySelector(mainWrapId),'hide');
+			html = temp.innerHTML;
+		}
 
         to = null;
         elem.innerHTML = html;
@@ -415,8 +450,6 @@ var Ajax = function(){
 
 
     return{
-        get: runAjax,
-        done: done,
-        setDone: function(){ done = true; }
+		get: runAjax
     }
 }
