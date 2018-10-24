@@ -22,7 +22,7 @@ get_header(); ?>
 			This is about page
 			<br/><br/>
 			<div>about content 01.</div>
-			<div id="content">about content 02.</div>
+			<div id="content" style="height:100vh">about content 02.</div>
 		</div>
 	</main>
 

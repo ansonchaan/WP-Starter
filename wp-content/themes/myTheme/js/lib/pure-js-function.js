@@ -120,12 +120,13 @@ var smoothScroll = function(elem, scrollFunc){
     var elem = document.querySelector(elem);
 
     // Check how much we can scroll. This value is the 
-    // height of the scrollable element minus the height of the widow
+	// height of the scrollable element minus the height of the widow
+	var fullElemHeight = elem.getBoundingClientRect().height;
     var elemHeight = elem.getBoundingClientRect().height - window.innerHeight;
 
     // Add easing to the scroll. Play with this value to find a setting that you like.
-    var ease = 0.2;
-    var mult = 1;
+    var ease = 0.1;
+    var mult = .7;
 	
     // Store current scroll position
     var targetX = 0, targetY = 0;
@@ -160,8 +161,9 @@ var smoothScroll = function(elem, scrollFunc){
 
         if( scrollFunc )
 			scrollFunc( currentY / elemHeight , currentY , elemHeight );
-			
-		rePositionScrollBar(currentY / elemHeight, currentY);
+		
+		if(fullElemHeight > window.innerHeight)
+			rePositionScrollBar(currentY / elemHeight, currentY);
 	}
 	
 	var initScrollBar = function(){
@@ -181,7 +183,7 @@ var smoothScroll = function(elem, scrollFunc){
 	}
 
 	var rePositionScrollBar = function(s, y){
-		var scrollBarHeight = window.innerHeight/elemHeight*100;
+		var scrollBarHeight = (1-(elemHeight/fullElemHeight))*100;
 		_this.scrollBar.style.height = scrollBarHeight + '%';
 		_this.scrollBarY = (window.innerHeight - _this.scrollBar.offsetHeight) * (y/elemHeight);
 
@@ -220,15 +222,26 @@ var smoothScroll = function(elem, scrollFunc){
     }
     
     var refresh = function() {
-		if(elem.parentNode != null) 
+		if(elem.parentNode != null){
+			fullElemHeight = elem.getBoundingClientRect().height;
 			elemHeight = elem.getBoundingClientRect().height - elem.parentNode.offsetHeight;
+
+			if(fullElemHeight > window.innerHeight){
+				if(hasClass(_this.scrollBarWrap,'hide'))
+					removeClass(_this.scrollBarWrap, 'hide');
+			}
+			else{
+				if(!hasClass(_this.scrollBarWrap,'hide'))
+					addClass(_this.scrollBarWrap, 'hide');
+			}
+		}
 	}
 	
 	var isOn = false;
 	var on = function(){
 		isOn = true;
-		refresh();
 		initScrollBar();
+		refresh();
 		VirtualScroll.on(onScroll);
 		FrameImpulse.on(onAnim);
 	}

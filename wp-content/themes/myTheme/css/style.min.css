@@ -39,13 +39,12 @@ input[type="submit"]{cursor:pointer}
 :-moz-placeholder{color:red}
 ::-moz-placeholder{color:red}
 :-ms-input-placeholder{color:red}
-#scrollBarWrap{width:12px;height:100vh;position:absolute;top:0;right:0;-webkit-animation:fadeIn .3s ease;animation:fadeIn .3s ease}
-#scrollBarWrap #scrollBar{width:100%;height:auto;background:rgba(0,0,0,0.2);border:2px solid white;border-radius:6px;position:absolute;top:0;right:0;-webkit-transition:all 300ms cubic-bezier(0.215,0.61,0.355,1);transition:all 300ms cubic-bezier(0.215,0.61,0.355,1)}
-#scrollBarWrap #scrollBar.active,#scrollBarWrap #scrollBar:hover{background:rgba(0,0,0,0.6)}
+#scrollBarWrap{width:12px;height:100vh;position:absolute;top:0;right:0;-webkit-animation:fadeIn .3s cubic-bezier(0.215,0.61,0.355,1);animation:fadeIn .3s cubic-bezier(0.215,0.61,0.355,1);-webkit-transition:opacity 300ms cubic-bezier(0.215,0.61,0.355,1);transition:opacity 300ms cubic-bezier(0.215,0.61,0.355,1)}
+#scrollBarWrap.hide{opacity:0}
+#scrollBarWrap #scrollBar{width:100%;height:auto;background-color:rgba(0,0,0,0.2);border:2px solid white;border-radius:6px;position:absolute;top:0;right:0;-webkit-transition:background-color 300ms cubic-bezier(0.215,0.61,0.355,1),height 600ms cubic-bezier(0.19,1,0.22,1);transition:background-color 300ms cubic-bezier(0.215,0.61,0.355,1),height 600ms cubic-bezier(0.19,1,0.22,1)}
+#scrollBarWrap #scrollBar.active,#scrollBarWrap #scrollBar:hover{background-color:rgba(0,0,0,0.6)}
 #mainWrap.hide{opacity:0;visibility:hidden}
 .about{color:#fff}
-.IE{height:100%;overflow-y:auto;overflow-x:hidden}
-.IE body{height:100%;overflow:scroll;overflow-x:hidden}
 @-webkit-keyframes fadeIn{from{opacity:0}
 to{opacity:1}
 }@keyframes fadeIn{from{opacity:0}

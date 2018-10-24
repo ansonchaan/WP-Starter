@@ -50,10 +50,9 @@ var initPage = function(){
 initPage();
 
 
-var mainWrap = document.querySelector('main');
+var mainWrap = document.querySelector('#scroll');
 if(mainWrap) 
-    var section = new smoothScroll('main', function(s, y, h) {
-    });
+    var section = new smoothScroll('#scroll', function(s, y, h) {});
 section.on();
 
 
