@@ -163,6 +163,8 @@ var setTranslate = function(elem, x, y, z) {
 //
 var smoothScroll = function(elem, scrollFunc){
 	
+	var _this = this;
+
 	// Grab both red boxes
     var elem = document.querySelector(elem);
 
@@ -171,7 +173,7 @@ var smoothScroll = function(elem, scrollFunc){
     var elemHeight = elem.getBoundingClientRect().height - window.innerHeight;
 
     // Add easing to the scroll. Play with this value to find a setting that you like.
-    var ease = 0.3;
+    var ease = 0.2;
     var mult = 1;
 	
     // Store current scroll position
@@ -182,7 +184,7 @@ var smoothScroll = function(elem, scrollFunc){
 	    
         // Accumulate delta value on each scroll event
         targetY += e.deltaY * mult;
-        targetX += e.deltaX * mult;
+		targetX += e.deltaX * mult;
         
         // Clamp the value so it doesn't go too far up or down
         // The value needs to be between 0 and -elemHeight
@@ -212,29 +214,55 @@ var smoothScroll = function(elem, scrollFunc){
 	}
 	
 	var initScrollBar = function(){
-		this.scrollBarWrap = document.createElement('div');
-		this.scrollBar = document.createElement('div');
+		_this.oldMouseY = 0;
+		_this.scrollBarWrap = document.createElement('div');
+		_this.scrollBar = document.createElement('div');
 
-		this.scrollBarWrap.setAttribute('id','scrollBarWrap');
-		this.scrollBar.setAttribute('id','scrollBar');
+		_this.scrollBarWrap.setAttribute('id','scrollBarWrap');
+		_this.scrollBar.setAttribute('id','scrollBar');
 
-		this.scrollBarWrap.appendChild(this.scrollBar);
-		elem.appendChild(this.scrollBarWrap);
+		addEvent(_this.scrollBar, 'mousedown', onMouseDownScrollBar);
+		addEvent(document, 'mousemove', onMoveScrollBar);
+		addEvent(document, 'mouseup', onMouseUpScrollBar);
+
+		_this.scrollBarWrap.appendChild(_this.scrollBar);
+		elem.appendChild(_this.scrollBarWrap);
 	}
 
 	var rePositionScrollBar = function(s, y){
 		var scrollBarHeight = window.innerHeight/elemHeight*100;
-		scrollBar.style.height = scrollBarHeight + '%';
-		var scrollBarY = (window.innerHeight - this.scrollBar.offsetHeight) * (y/elemHeight);
+		_this.scrollBar.style.height = scrollBarHeight + '%';
+		_this.scrollBarY = (window.innerHeight - _this.scrollBar.offsetHeight) * (y/elemHeight);
 
-		setTranslate( this.scrollBarWrap , 0+'px' , (-y.toFixed(4)) +'px' , 0+'px' );
-		setTranslate( this.scrollBar , 0+'px' , (-scrollBarY.toFixed(4)) +'px' , 0+'px' );
+		setTranslate( _this.scrollBarWrap , 0+'px' , (-y.toFixed(4)) +'px' , 0+'px' );
+		setTranslate( _this.scrollBar , 0+'px' , (-_this.scrollBarY.toFixed(4)) +'px' , 0+'px' );
+	}
+
+	var onMouseDownScrollBar = function(e){
+		e.preventDefault();
+		_this.oldMouseY = e.pageY;
+		_this.clickedScrollBar = true;
+		addClass(this, 'active');
+	}
+
+	var onMoveScrollBar = function(e){
+		if(_this.clickedScrollBar){
+			var y = _this.oldMouseY - e.pageY;
+			targetY += y * 4;
+
+			targetY = Math.max(-elemHeight, targetY);
+			targetY = Math.min(0, targetY);
+
+			_this.oldMouseY = e.pageY;
+		}
+	}
+
+	var onMouseUpScrollBar = function(){
+		_this.clickedScrollBar = false;
+		removeClass(_this.scrollBar, 'active');
 	}
 
 
-
-
-    
     var reset = function(){
 	    currentY = 0;
 	    targetY = 0;

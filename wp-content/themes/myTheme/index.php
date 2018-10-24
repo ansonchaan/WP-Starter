@@ -23,7 +23,7 @@ get_header(); ?>
 			<br/>
 			This is home page
 			<br/><br/>
-			<div id="featured_about" style="height: 200vh;"></div>
+			<div id="featured_about" style="height: 400vh;"></div>
 		</div>
 	</main>
 	
