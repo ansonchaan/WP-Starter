@@ -164,6 +164,8 @@ var smoothScroll = function(elem, scrollFunc){
 		
 		if(fullElemHeight > window.innerHeight)
 			rePositionScrollBar(currentY / elemHeight, currentY);
+
+		lazyLoad.checkAndShowImg();
 	}
 	
 	var initScrollBar = function(){
@@ -282,48 +284,92 @@ var smoothScroll = function(elem, scrollFunc){
 //
 // Load all img from HTML String
 //
-var load_img = function( html , completeFunc ){
-	var parser = new DOMParser();
-	var output_html = parser.parseFromString(html, "text/html");
-	var imgs = output_html.querySelectorAll('img');
-	var lth = imgs.length;
-	var done = 0;
-	
-	if(imgs.length){
-		for( var i=0; i<lth; i++ ) {
-			var _this = imgs[i];
-			var src = _this.getAttribute('src');
-			var img = new Image();
-			img.src = src;
-			
-			if ( img.complete && img.width+img.height > 0 ) {
-				//console.log('already loaded');
-				done++;
-				if(isAllDone(done,lth)){
-					if(completeFunc) completeFunc();
-				}
-			}
-			else{
-				img.onload = function() {
-					done++;
-					if(isAllDone(done,lth)){
-						if(completeFunc) completeFunc();
-					}
-					//console.log('loaded image');
-				}
+var LazyLoad = function(){
+
+	var _this = this;
+
+	var init = function(){
+		_this.imgs = document.querySelectorAll('[data-src]');
+		checkAndShowImg();
+	}
+
+	var checkAndShowImg = function(){
+		for(var i=0; _this.imgs[i]; i++){
+			var _img = _this.imgs[i];
+			var offsetTop = _img.getBoundingClientRect().top - window.innerHeight - (window.innerHeight/2);
+			if( offsetTop <= 0 && !hasClass(_img,'inited') && !hasClass(_img,'loaded')){
+				(function(){
+					var __img = _img;
+					var src = __img.getAttribute('data-src');
+					var img = new Image();
+					
+					// addClass(__img,'inited');
+
+					// img.onload = function(){
+						if(__img.tagName == 'DIV')
+							__img.style.backgroundImage = 'url('+src+')';
+						else
+							__img.setAttribute('src',src);
+
+						// removeClass(__img,'inited');
+						addClass(__img,'loaded');
+					// }
+					img.src = src;
+				})();
 			}
 		}
 	}
-	else{
-		if(completeFunc) completeFunc();
+
+	return{
+		init: init,
+		checkAndShowImg: checkAndShowImg
 	}
 }
-var isAllDone = function( idx , lth ){
-	if( idx >= lth )
-		return true;
-	else
-		return false;
-}
+var lazyLoad = new LazyLoad();
+lazyLoad.init();
+
+// var load_img = function( html , completeFunc ){
+// 	var parser = new DOMParser();
+// 	var output_html = parser.parseFromString(html, "text/html");
+// 	var imgs = output_html.querySelectorAll('img');
+// 	var lth = imgs.length;
+// 	var done = 0;
+	
+// 	if(imgs.length){
+// 		for( var i=0; i<lth; i++ ) {
+// 			var _this = imgs[i];
+// 			var src = _this.getAttribute('src');
+// 			var img = new Image();
+// 			img.src = src;
+			
+// 			if ( img.complete && img.width+img.height > 0 ) {
+// 				//console.log('already loaded');
+// 				done++;
+// 				if(isAllDone(done,lth)){
+// 					if(completeFunc) completeFunc();
+// 				}
+// 			}
+// 			else{
+// 				img.onload = function() {
+// 					done++;
+// 					if(isAllDone(done,lth)){
+// 						if(completeFunc) completeFunc();
+// 					}
+// 					//console.log('loaded image');
+// 				}
+// 			}
+// 		}
+// 	}
+// 	else{
+// 		if(completeFunc) completeFunc();
+// 	}
+// }
+// var isAllDone = function( idx , lth ){
+// 	if( idx >= lth )
+// 		return true;
+// 	else
+// 		return false;
+// }
 
 
 var print = function(state, color, text){
@@ -500,7 +546,8 @@ var Ajax = function(){
 
         to = null;
         elem.innerHTML = html;
-        initEventToAtag(elem);
+		initEventToAtag(elem);
+		lazyLoad.init();
 	}
 	
 	window.onpopstate = function(event) {
