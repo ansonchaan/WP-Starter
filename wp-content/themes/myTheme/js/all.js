@@ -166,12 +166,12 @@ var smoothScroll = function(elem, scrollFunc){
 	var _this = this;
 
 	// Grab both red boxes
-    var elem = document.querySelector(elem);
+    this.elem = document.querySelector(elem);
 
     // Check how much we can scroll. This value is the 
 	// height of the scrollable element minus the height of the widow
-	var fullElemHeight = elem.getBoundingClientRect().height;
-    var elemHeight = elem.getBoundingClientRect().height - window.innerHeight;
+	var fullElemHeight = this.elem.getBoundingClientRect().height;
+    var elemHeight = this.elem.getBoundingClientRect().height - window.innerHeight;
 
     // Add easing to the scroll. Play with this value to find a setting that you like.
     var ease = 0.1;
@@ -204,7 +204,7 @@ var smoothScroll = function(elem, scrollFunc){
         // currentX += (targetX - currentX) * ease;
         
         // Apply CSS style
-        setTranslate( elem , currentX.toFixed(4) +'px' , currentY.toFixed(4) +'px' , 0+'px' );
+        setTranslate( _this.elem , currentX.toFixed(4) +'px' , currentY.toFixed(4) +'px' , 0+'px' );
 		
 		refresh();
 
@@ -228,7 +228,7 @@ var smoothScroll = function(elem, scrollFunc){
 		addEvent(document, 'mouseup', onMouseUpScrollBar);
 
 		_this.scrollBarWrap.appendChild(_this.scrollBar);
-		elem.appendChild(_this.scrollBarWrap);
+		_this.elem.appendChild(_this.scrollBarWrap);
 	}
 
 	var rePositionScrollBar = function(s, y){
@@ -271,9 +271,9 @@ var smoothScroll = function(elem, scrollFunc){
     }
     
     var refresh = function() {
-		if(elem.parentNode != null){
-			fullElemHeight = elem.getBoundingClientRect().height;
-			elemHeight = elem.getBoundingClientRect().height - elem.parentNode.offsetHeight;
+		if(_this.elem.parentNode != null){
+			fullElemHeight = _this.elem.getBoundingClientRect().height;
+			elemHeight = _this.elem.getBoundingClientRect().height - _this.elem.parentNode.offsetHeight;
 
 			if(fullElemHeight > window.innerHeight){
 				if(hasClass(_this.scrollBarWrap,'hide'))
@@ -306,7 +306,7 @@ var smoothScroll = function(elem, scrollFunc){
 		if( ismobile ){ 
 			if(isOn){
 				off();
-				setTranslate( elem , 0+'px' , 0+'px' , 0+'px' );
+				setTranslate( _this.elem , 0+'px' , 0+'px' , 0+'px' );
 			}
 		}
 		else{

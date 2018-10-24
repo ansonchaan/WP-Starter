@@ -8,8 +8,6 @@ table{border-collapse:collapse;border-spacing:0}
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
 .clearfix{*zoom:1}
 *{-webkit-text-size-adjust:none}
-@font-face{font-family:'TecoSansStencil';src:url("../fonts/TecoSansStencil.eot");src:url("../fonts/TecoSansStencil.eot?#iefix") format("embedded-opentype"),url("../fonts/TecoSansStencil.woff") format("woff"),url("../fonts/TecoSansStencil.ttf") format("truetype"),url("../fonts/TecoSansStencil.svg#d6eae7a12a8d60651ae3073d0b497b4a") format("svg");font-style:normal;font-weight:400}
-@font-face{font-family:'TecoSansStencil Light';src:url("../fonts/TecoSansStencil-Light-Light.eot");src:url("../fonts/TecoSansStencil-Light-Light.eot?#iefix") format("embedded-opentype"),url("../fonts/TecoSansStencil-Light-Light.woff") format("woff"),url("../fonts/TecoSansStencil-Light-Light.ttf") format("truetype"),url("../fonts/TecoSansStencil-Light-Light.svg#c9851e21217aa63c5485106c292b0355") format("svg");font-style:normal;font-weight:200}
 *{-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:rgba(0,0,0,0)}
 html,body{width:100%;height:100%;overflow:hidden}
 body{width:100%;height:100%;font-family:"TecoSansStencil"}
