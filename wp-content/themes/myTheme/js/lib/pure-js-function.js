@@ -163,7 +163,7 @@ var smoothScroll = function(elem, scrollFunc){
 			scrollFunc( currentY / elemHeight , currentY , elemHeight );
 		
 		if(fullElemHeight > window.innerHeight)
-			rePositionScrollBar(currentY / elemHeight, currentY);
+			rePositionScrollBar(currentY);
 
 		lazyLoad.checkAndShowImg();
 	}
@@ -184,7 +184,7 @@ var smoothScroll = function(elem, scrollFunc){
 		_this.elem.appendChild(_this.scrollBarWrap);
 	}
 
-	var rePositionScrollBar = function(s, y){
+	var rePositionScrollBar = function(y){
 		var scrollBarHeight = (1-(elemHeight/fullElemHeight))*100;
 		_this.scrollBar.style.height = scrollBarHeight + '%';
 		_this.scrollBarY = (window.innerHeight - _this.scrollBar.offsetHeight) * (y/elemHeight);
