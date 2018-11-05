@@ -501,7 +501,7 @@ var Ajax = function(){
         else{
             var temp = document.createElement('div');
             temp.innerHTML = data;
-            data = temp.querySelector('#'+getFrom).outerHTML;
+            data = temp.querySelector('#'+getFrom).innerHTML;
             temp = null;
         }
 
@@ -534,6 +534,8 @@ var Ajax = function(){
 
         if(to){
 			elem = to;
+        	elem.insertAdjacentHTML('beforeend', html);
+			to = null;
 		}else{
 			elem = main;
 
@@ -542,10 +544,9 @@ var Ajax = function(){
             temp.innerHTML = html;
 			addClass(temp.querySelector(mainWrapId),'hide');
 			html = temp.innerHTML;
+			elem.innerHTML = html;
 		}
 
-        to = null;
-        elem.innerHTML = html;
 		initEventToAtag(elem);
 		lazyLoad.init();
 	}

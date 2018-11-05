@@ -212,7 +212,7 @@ var smoothScroll = function(elem, scrollFunc){
 			scrollFunc( currentY / elemHeight , currentY , elemHeight );
 		
 		if(fullElemHeight > window.innerHeight)
-			rePositionScrollBar(currentY / elemHeight, currentY);
+			rePositionScrollBar(currentY);
 
 		lazyLoad.checkAndShowImg();
 	}
@@ -233,7 +233,7 @@ var smoothScroll = function(elem, scrollFunc){
 		_this.elem.appendChild(_this.scrollBarWrap);
 	}
 
-	var rePositionScrollBar = function(s, y){
+	var rePositionScrollBar = function(y){
 		var scrollBarHeight = (1-(elemHeight/fullElemHeight))*100;
 		_this.scrollBar.style.height = scrollBarHeight + '%';
 		_this.scrollBarY = (window.innerHeight - _this.scrollBar.offsetHeight) * (y/elemHeight);
@@ -550,7 +550,7 @@ var Ajax = function(){
         else{
             var temp = document.createElement('div');
             temp.innerHTML = data;
-            data = temp.querySelector('#'+getFrom).outerHTML;
+            data = temp.querySelector('#'+getFrom).innerHTML;
             temp = null;
         }
 
@@ -583,6 +583,8 @@ var Ajax = function(){
 
         if(to){
 			elem = to;
+        	elem.insertAdjacentHTML('beforeend', html);
+			to = null;
 		}else{
 			elem = main;
 
@@ -591,10 +593,9 @@ var Ajax = function(){
             temp.innerHTML = html;
 			addClass(temp.querySelector(mainWrapId),'hide');
 			html = temp.innerHTML;
+			elem.innerHTML = html;
 		}
 
-        to = null;
-        elem.innerHTML = html;
 		initEventToAtag(elem);
 		lazyLoad.init();
 	}
