@@ -238,7 +238,18 @@ var smoothScroll = function(elem, scrollFunc){
 			}
 		}
 	}
-	
+
+	var to = function(y){
+		targetY = y;
+	}
+	var set = function(y){
+		currentY = currentY + y;
+		targetY = currentY;
+		setTranslate( _this.elem , 0+'px' , y+'px' , 0+'px' );
+		
+		setTimeout(function(){idx = section_num;},200);
+	}
+
 	var isOn = false;
 	var on = function(){
 		isOn = true;
@@ -274,6 +285,8 @@ var smoothScroll = function(elem, scrollFunc){
 		reset: reset,
 		refresh: refresh,
 		onResize: onResize,
+		set: set,
+		to: to,
 		on: on,
 		off: off
 	}
@@ -301,7 +314,7 @@ var LazyLoad = function(){
 				(function(){
 					var __img = _img;
 					var src = __img.getAttribute('data-src');
-					var img = new Image();
+					// var img = new Image();
 					
 					// addClass(__img,'inited');
 
@@ -314,7 +327,7 @@ var LazyLoad = function(){
 						// removeClass(__img,'inited');
 						addClass(__img,'loaded');
 					// }
-					img.src = src;
+					// img.src = src;
 				})();
 			}
 		}

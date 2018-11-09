@@ -24,5 +24,6 @@
 </head>
 
 <body <?php body_class(); ?>>
-	<div id="scroll">
+	<div id="body_wrap">
+		<div id="scroll">
 <?php wp_reset_query(); ?>

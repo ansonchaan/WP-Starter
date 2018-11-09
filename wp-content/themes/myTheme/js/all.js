@@ -287,7 +287,18 @@ var smoothScroll = function(elem, scrollFunc){
 			}
 		}
 	}
-	
+
+	var to = function(y){
+		targetY = y;
+	}
+	var set = function(y){
+		currentY = currentY + y;
+		targetY = currentY;
+		setTranslate( _this.elem , 0+'px' , y+'px' , 0+'px' );
+		
+		setTimeout(function(){idx = section_num;},200);
+	}
+
 	var isOn = false;
 	var on = function(){
 		isOn = true;
@@ -323,6 +334,8 @@ var smoothScroll = function(elem, scrollFunc){
 		reset: reset,
 		refresh: refresh,
 		onResize: onResize,
+		set: set,
+		to: to,
 		on: on,
 		off: off
 	}
@@ -350,7 +363,7 @@ var LazyLoad = function(){
 				(function(){
 					var __img = _img;
 					var src = __img.getAttribute('data-src');
-					var img = new Image();
+					// var img = new Image();
 					
 					// addClass(__img,'inited');
 
@@ -363,7 +376,7 @@ var LazyLoad = function(){
 						// removeClass(__img,'inited');
 						addClass(__img,'loaded');
 					// }
-					img.src = src;
+					// img.src = src;
 				})();
 			}
 		}
@@ -970,48 +983,51 @@ var home = new Home();
 
 
 
+var md = new MobileDetect(window.navigator.userAgent);
 
 
 
 
+(function(){
+    var CurrentPage = getPageName();
+    var ToPage = '';
+    print('Current Page','#999',CurrentPage);
 
-var CurrentPage = getPageName();
-var ToPage = '';
-print('Current Page','#999',CurrentPage);
-
-var ajax = new Ajax();
-var initPage = function(){
-    var page = (ToPage)? ToPage : CurrentPage;
-    
-    if(page == 'home'){
-        // get specify content from other page
-        // ajax.get(url, get from(id), insert to(id), callback)
-        ajax.get('/wpstarter/about/','content','featured_about',
-            function(){
-                home.initFeaturedAbout();
-            }
-        );
-        home.init();
+    var ajax = new Ajax();
+    var initPage = function(){
+        var page = (ToPage)? ToPage : CurrentPage;
+        
+        if(page == 'home'){
+            // get specify content from other page
+            // ajax.get(url, get from(id), insert to(id), callback)
+            ajax.get('/wpstarter/about/','content','featured_about',
+                function(){
+                    home.initFeaturedAbout();
+                }
+            );
+            home.init();
+        }
+        else if(page == 'about'){
+            about.init();
+        }
     }
-    else if(page == 'about'){
-        about.init();
+    initPage();
+
+
+    var mainWrap = document.querySelector('#scroll');
+    if(mainWrap) 
+        var section = new smoothScroll('#scroll', function(s, y, h) {});
+    section.on();
+})();
+
+
+(function(){
+    //
+    // Resize
+    //
+    var resize = function(e){
+        md = new MobileDetect(window.navigator.userAgent);
     }
-}
-initPage();
-
-
-var mainWrap = document.querySelector('#scroll');
-if(mainWrap) 
-    var section = new smoothScroll('#scroll', function(s, y, h) {});
-section.on();
-
-
-
-//
-// Resize
-//
-var resize = function(e){
-
-}
-resize();
-addEvent( window , 'resize' , resize );
+    resize();
+    addEvent( window , 'resize' , resize );
+})();

@@ -11,6 +11,7 @@
 $ua=getBrowser();
 ?>
 			</div><!-- end of #scroll -->
+		</div>
 		<?php 
 		if( $ua['name'] == 'IE' )
 			wp_enqueue_script( 'flickity' ,'https://npmcdn.com/flickity@1.2.1/dist/flickity.pkgd.js');
