@@ -13,26 +13,39 @@
 	<link rel="shortcut icon" href="/images/favicon.ico">
 
 	<!-- Search Engine -->
-	<!-- 
+<!-- 
 	<meta name="description" content="xxx"> 
-	<meta name="image" content="text">
-	-->
+	<meta name="image" content="text"> -->
+
 	<!-- Schema.org for Google -->
-	<!-- 
+<!-- 
 	<meta itemprop="name" content="xxx">
 	<meta itemprop="description" content="xxx"> 
-	<meta itemprop="image" content="text">
-	-->
+	<meta itemprop="image" content="text"> -->
+
+	<!-- Twitter -->
+<!-- 
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="<?php echo bloginfo('name'); ?>">
+	<meta name="twitter:description" content="xxx">
+	<meta name="twitter:image:src" content="xxx"> -->
+
 	<!-- Open Graph general (Facebook, Pinterest & Google+) -->
-	<!-- 
-	<meta name="og:url" content="<?php echo site_url('/'); ?>">
-	<meta name="og:title" content="<?php echo bloginfo('name'); ?>"/>
-	<meta name="og:site_name" content="<?php echo bloginfo('name'); ?>"/>
-	<meta name="og:description" content="xxx"/>
-	<meta name="og:image" content="xxx"/>
-	<meta name="og:locale" content="zh_HK">
-	<meta name="og:type" content="website" />
-	-->
+<!-- 
+	<meta property="og:url" content="<?php echo site_url('/'); ?>">
+	<meta property="og:title" content="<?php echo bloginfo('property'); ?>"/>
+	<meta property="og:site_property" content="<?php echo bloginfo('property'); ?>"/>
+	<meta property="og:description" content="xxx"/>
+	<meta property="og:image" content="xxx"/>
+	<meta property="og:locale" content="zh_HK">
+	<meta property="og:type" content="<?php if(is_single())echo'article';else echo'website'; ?>" /> -->
+
+	<!-- Open Graph - Article -->
+<!-- 
+	<meta name="article:section" content="section">
+	<meta name="article:published_time" content="2016-10-10T19:08:47+01:00">
+	<meta name="article:author" content="author">
+	<meta name="article:tag" content="tag"> -->
 	
 	<?
 	wp_enqueue_style('style', get_template_directory_uri().'/css/style.min.css', array(), null, 'all');
