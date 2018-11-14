@@ -10,13 +10,20 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
 	<title><?php wp_title( '|', true, 'right' ); ?></title>
 	<base href="<?$directory=get_template_directory_uri(); echo $directory; ?>/" />
-	<meta name="description" content="">
 	<link rel="shortcut icon" href="/images/favicon.ico">
-	<!-- <meta property="og:type" content="activity" />
-	<meta property="og:title" content="<?php echo bloginfo('name'); ?>"/>
-	<meta property="og:image" content=""/>
+
+	<!-- Search Engine -->
+	<!-- <meta name="description" content="xxx"> -->
+	<!-- Schema.org for Google -->
+	<!-- <meta itemprop="name" content="xxx">
+	<meta itemprop="description" content="xxx"> -->
+	<!-- Open Graph general (Facebook, Pinterest & Google+) -->
+	<!-- <meta property="og:title" content="<?php echo bloginfo('name'); ?>"/>
 	<meta property="og:site_name" content="<?php echo bloginfo('name'); ?>"/>
-	<meta property="og:description" content=""/> -->
+	<meta property="og:description" content=""/>
+	<meta property="og:image" content=""/>
+	<meta property="og:type" content="website" /> -->
+	
 	<?
 	wp_enqueue_style('style', get_template_directory_uri().'/css/style.min.css', array(), null, 'all');
 	?>
