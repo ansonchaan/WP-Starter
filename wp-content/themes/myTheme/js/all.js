@@ -984,23 +984,22 @@ var home = new Home();
 
 
 var md = new MobileDetect(window.navigator.userAgent);
-
-
+var CurrentPage,ToPage,initPage,section;
 
 
 (function(){
-    var CurrentPage = getPageName();
-    var ToPage = '';
+    CurrentPage = getPageName();
+    ToPage = '';
     print('Current Page','#999',CurrentPage);
 
     var ajax = new Ajax();
-    var initPage = function(){
+    initPage = function(){
         var page = (ToPage)? ToPage : CurrentPage;
         
         if(page == 'home'){
             // get specify content from other page
             // ajax.get(url, get from(id), insert to(id), callback)
-            ajax.get('/wpstarter/about/','content','featured_about',
+            ajax.get(window.location.pathname+'about/','content','featured_about',
                 function(){
                     home.initFeaturedAbout();
                 }
@@ -1016,7 +1015,7 @@ var md = new MobileDetect(window.navigator.userAgent);
 
     var mainWrap = document.querySelector('#scroll');
     if(mainWrap) 
-        var section = new smoothScroll('#scroll', function(s, y, h) {});
+        section = new smoothScroll('#scroll', function(s, y, h) {});
     section.on();
 })();
 
