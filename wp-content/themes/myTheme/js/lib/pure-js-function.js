@@ -125,19 +125,22 @@ var smoothScroll = function(elem, scrollFunc){
     var elemHeight = this.elem.getBoundingClientRect().height - window.innerHeight;
 
     // Add easing to the scroll. Play with this value to find a setting that you like.
-    var ease = 0.1;
+    var ease = .2;
     var mult = .7;
 	
     // Store current scroll position
     var targetX = 0, targetY = 0;
-    var currentX = 0, currentY = 0;
+	var currentX = 0, currentY = 0;
+	
+	// scroll bar padding
+	var padding = 3;
     
     var onScroll = function(e) {
 	    
         // Accumulate delta value on each scroll event
         targetY += e.deltaY * mult;
 		targetX += e.deltaX * mult;
-        
+
         // Clamp the value so it doesn't go too far up or down
         // The value needs to be between 0 and -elemHeight
         targetY = Math.max(-elemHeight, targetY);
@@ -181,15 +184,15 @@ var smoothScroll = function(elem, scrollFunc){
 		addEvent(document, 'mouseup', onMouseUpScrollBar);
 
 		_this.scrollBarWrap.appendChild(_this.scrollBar);
-		_this.elem.appendChild(_this.scrollBarWrap);
+		document.body.appendChild(_this.scrollBarWrap);
 	}
 
 	var rePositionScrollBar = function(y){
 		var scrollBarHeight = (1-(elemHeight/fullElemHeight))*100;
 		_this.scrollBar.style.height = scrollBarHeight + '%';
-		_this.scrollBarY = (window.innerHeight - _this.scrollBar.offsetHeight) * (y/elemHeight);
+		_this.scrollBarY = (window.innerHeight - (padding * 2) - _this.scrollBar.offsetHeight) * (y/elemHeight) - padding;
 
-		setTranslate( _this.scrollBarWrap , 0+'px' , (-y.toFixed(4)) +'px' , 0+'px' );
+		// setTranslate( _this.scrollBarWrap , 0+'px' , (-y.toFixed(4)) +'px' , 0+'px' );
 		setTranslate( _this.scrollBar , 0+'px' , (-_this.scrollBarY.toFixed(4)) +'px' , 0+'px' );
 	}
 
@@ -203,12 +206,12 @@ var smoothScroll = function(elem, scrollFunc){
 	var onMoveScrollBar = function(e){
 		if(_this.clickedScrollBar){
 			var y = _this.oldMouseY - e.pageY;
-			targetY += y * 4;
+			targetY += y * (fullElemHeight / window.innerHeight);
 
 			targetY = Math.max(-elemHeight, targetY);
 			targetY = Math.min(0, targetY);
 
-			_this.oldMouseY = e.pageY;
+			setTimeout(function(){_this.oldMouseY = e.pageY},0);
 		}
 	}
 
