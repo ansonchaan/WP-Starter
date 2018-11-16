@@ -211,7 +211,7 @@ var smoothScroll = function(elem, scrollFunc){
 			targetY = Math.max(-elemHeight, targetY);
 			targetY = Math.min(0, targetY);
 
-			setTimeout(function(){_this.oldMouseY = e.pageY},0);
+			_this.oldMouseY = e.pageY;
 		}
 	}
 
