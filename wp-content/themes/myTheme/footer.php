@@ -11,6 +11,8 @@
 $ua=getBrowser();
 ?>
 			</div><!-- end of #scroll -->
+
+			<?php get_template_part('components/menu'); ?>
 		</div>
 		<?php 
 		if( $ua['name'] == 'IE' )
