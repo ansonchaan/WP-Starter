@@ -313,18 +313,18 @@ var smoothScroll = function(elem, scrollFunc){
 
 
 //
-// Load all img from HTML String
+// LazyLoad img when image in viewport
 //
 var LazyLoad = function(){
 
 	var _this = this;
 
-	var init = function(){
+	this.init = function(){
 		_this.imgs = document.querySelectorAll('[data-src]');
-		checkAndShowImg();
+		_this.checkAndShowImg();
 	}
 
-	var checkAndShowImg = function(){
+	this.checkAndShowImg = function(){
 		for(var i=0; _this.imgs[i]; i++){
 			var _img = _this.imgs[i];
 			var offsetTop = _img.getBoundingClientRect().top - window.innerHeight - (window.innerHeight/2);
@@ -332,77 +332,34 @@ var LazyLoad = function(){
 				(function(){
 					var __img = _img;
 					var src = __img.getAttribute('data-src');
-					// var img = new Image();
-					
-					// addClass(__img,'inited');
 
-					// img.onload = function(){
-						if(__img.tagName == 'DIV')
-							__img.style.backgroundImage = 'url('+src+')';
-						else
-							__img.setAttribute('src',src);
+					if(__img.tagName == 'DIV')
+						__img.style.backgroundImage = 'url('+src+')';
+					else
+						__img.setAttribute('src',src);
 
-						// removeClass(__img,'inited');
-						addClass(__img,'loaded');
-					// }
-					// img.src = src;
+					addClass(__img,'loaded');
 				})();
 			}
 		}
 	}
 
 	return{
-		init: init,
-		checkAndShowImg: checkAndShowImg
+		init: _this.init,
+		checkAndShowImg: _this.checkAndShowImg
 	}
 }
 var lazyLoad = new LazyLoad();
 lazyLoad.init();
 
-// var load_img = function( html , completeFunc ){
-// 	var parser = new DOMParser();
-// 	var output_html = parser.parseFromString(html, "text/html");
-// 	var imgs = output_html.querySelectorAll('img');
-// 	var lth = imgs.length;
-// 	var done = 0;
-	
-// 	if(imgs.length){
-// 		for( var i=0; i<lth; i++ ) {
-// 			var _this = imgs[i];
-// 			var src = _this.getAttribute('src');
-// 			var img = new Image();
-// 			img.src = src;
-			
-// 			if ( img.complete && img.width+img.height > 0 ) {
-// 				//console.log('already loaded');
-// 				done++;
-// 				if(isAllDone(done,lth)){
-// 					if(completeFunc) completeFunc();
-// 				}
-// 			}
-// 			else{
-// 				img.onload = function() {
-// 					done++;
-// 					if(isAllDone(done,lth)){
-// 						if(completeFunc) completeFunc();
-// 					}
-// 					//console.log('loaded image');
-// 				}
-// 			}
-// 		}
-// 	}
-// 	else{
-// 		if(completeFunc) completeFunc();
-// 	}
-// }
-// var isAllDone = function( idx , lth ){
-// 	if( idx >= lth )
-// 		return true;
-// 	else
-// 		return false;
-// }
 
 
+
+
+
+//
+//	styling console.log
+//
 var print = function(state, color, text){
 	var text = (typeof text == 'object')? JSON.stringify(text) : text || '';
 	return console.log('%c'+state+'%c %s','color:white;background:'+color+';padding:3px 4px 2px 3px;border-radius:3px;','',text);
@@ -421,45 +378,47 @@ var getPageName = function(){
     return (page)? page : 'home';
 }
 var Ajax = function(){
+	var _this = this;
     var ignoreString = ['#','/wp-','.pdf','.zip','.rar'];
     var main = document.querySelector('main');
     var done = true;
 
-	var initEventToAtag = function(elem){
+	this.initEventToAtag = function(elem){
+		var _this = this;
         var a = elem.querySelectorAll('a.page');
         for(var i=0; a[i]; i++){
             addEvent(a[i], 'click', function(event){
-                onClick(event, this.href);
+                _this.onClick(event, this.href);
             });
         }
     }
-	initEventToAtag(document);
+	this.initEventToAtag(document);
     
-    var onClick = function(event, href){
+    this.onClick = function(event, href){
         event.preventDefault();
 
         print('','','');
 		print('Current Page','#999',CurrentPage);
 		
-		updateURL(href);
+		_this.updateURL(href);
 
         ToPage = getPageName();
 		print('Going to','#999',ToPage);
 
-		runAjax(href);
+		_this.runAjax(href);
 	}
 
 
-    var runAjax = function(href, getFrom, insertTo, callback){
-        if(checkIgnoreString(href)){
+    this.runAjax = function(href, getFrom, insertTo, callback){
+        if(_this.checkIgnoreString(href)){
 			var ignoreDetection = getFrom && insertTo;
 
-            if(checkIfSamePage(ignoreDetection)){
+            if(_this.checkIfSamePage(ignoreDetection)){
                 if(!ignoreDetection) done = false;
 
 				print('Start Ajax','#999',href);
 				
-				onAnimBeforeAjax(getFrom,function(){
+				_this.onAnimBeforeAjax(getFrom,function(){
 					axios
 						.get(href)
 						.then(function(response){
@@ -467,13 +426,13 @@ var Ajax = function(){
 							CurrentPage = getPageName();
 
 							var data = response.data,
-								html = getPageContent(data,getFrom);
+								html = _this.getPageContent(data,getFrom);
 
 							if(!getFrom)
-								updateSiteTitle(data);
-							insertHTML(html,insertTo);
+								_this.updateSiteTitle(data);
+							_this.insertHTML(html,insertTo);
 
-							onAnimAfterAjax();
+							_this.onAnimAfterAjax();
 
 							if(callback) callback();
 							if(!done){
@@ -489,7 +448,7 @@ var Ajax = function(){
         }
 	}
 	
-	var onAnimBeforeAjax = function(getFrom, func){
+	this.onAnimBeforeAjax = function(getFrom, func){
 		if(!getFrom)
 			TweenMax.to(mainWrapId,.3,{autoAlpha:0,
 				onComplete:function(){
@@ -500,11 +459,11 @@ var Ajax = function(){
 			func();
 	}
 
-	var onAnimAfterAjax = function(){
+	this.onAnimAfterAjax = function(){
         TweenMax.to(mainWrapId,.3,{autoAlpha:1});
 	}
 
-    var checkIfSamePage = function(ignore){
+    this.checkIfSamePage = function(ignore){
 		if(!ignore){
 			if(CurrentPage == ToPage){
 				print('Page Detection','red', 'Clicked a Same Page!');
@@ -515,7 +474,7 @@ var Ajax = function(){
         return true;
     }
 
-    var checkIgnoreString = function(url){
+    this.checkIgnoreString = function(url){
         for(var i=0; ignoreString[i]; i++){
             if (url.indexOf(ignoreString[i]) >= 0) {
                 print('Ignore URL','red',url);
@@ -526,7 +485,7 @@ var Ajax = function(){
         return true;
     }
 
-    var getPageContent = function(data, getFrom){
+    this.getPageContent = function(data, getFrom){
         if(!getFrom)
             data = data.split('<main>')[1].split('</main>')[0];
         else{
@@ -539,15 +498,15 @@ var Ajax = function(){
         return data;
     }
 
-    var getSiteTitle = function(data){
+    this.getSiteTitle = function(data){
         data = data.split('<title>')[1].split('</title>')[0];
         return data;
     }
-    var updateSiteTitle = function(data){
-        document.querySelector('title').innerHTML = getSiteTitle(data);
+    this.updateSiteTitle = function(data){
+        document.querySelector('title').innerHTML = _this.getSiteTitle(data);
     }
 
-    var updateURL = function(href){
+    this.updateURL = function(href){
         var nohttp = href.replace("http://","").replace("https://","");
         var firstsla = nohttp.indexOf("/");
         var pathpos = href.indexOf(nohttp);
@@ -559,7 +518,7 @@ var Ajax = function(){
         }
     }
 
-    var insertHTML = function(html, insertTo){
+    this.insertHTML = function(html, insertTo){
         var elem,
             to = document.querySelector('#'+insertTo);
 
@@ -578,18 +537,17 @@ var Ajax = function(){
 			elem.innerHTML = html;
 		}
 
-		initEventToAtag(elem);
+		_this.initEventToAtag(elem);
 		lazyLoad.init();
 	}
 	
 	window.onpopstate = function(event) {
 		var url = document.location.toString();
 		print('Back to','black',url);
-		onClick(event,url);
+		_this.onClick(event,url);
 	}
 
-
     return{
-		get: runAjax
+		get: _this.runAjax
     }
 }
