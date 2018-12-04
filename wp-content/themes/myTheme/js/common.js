@@ -18,7 +18,8 @@
 //   
 */
 
-
+var baseFontRatio = 16 / 1440;
+var fontMultiplier = 0.84375;
 
 var md = new MobileDetect(window.navigator.userAgent);
 var CurrentPage,ToPage,initPage,section;
@@ -63,6 +64,15 @@ var CurrentPage,ToPage,initPage,section;
     //
     var resize = function(e){
         md = new MobileDetect(window.navigator.userAgent);
+
+        // Global scale if > 1440
+        var width = window.innerWidth;
+        var roundNumber = Math.round(baseFontRatio * width * fontMultiplier);
+        if(roundNumber >= 16) //roundNumber = 16;
+            document.documentElement.style.fontSize = roundNumber + 'px';
+        else
+            document.documentElement.style.fontSize = '';
+
     }
     resize();
     addEvent( window , 'resize' , resize );

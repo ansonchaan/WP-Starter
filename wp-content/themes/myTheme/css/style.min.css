@@ -44,6 +44,7 @@ body :-moz-placeholder{color:#000}
 body ::-moz-placeholder{color:#000}
 body :-ms-input-placeholder{color:#000}
 #mainWrap.hide{opacity:0;visibility:hidden}
+#mainWrap img{width:18.75rem}
 .about{color:#fff}
 @-webkit-keyframes fadeIn{from{opacity:0}
 to{opacity:1}

@@ -26,9 +26,9 @@ get_header(); ?>
 			<div style="width:300px;height:198px" data-src="https://hkipf.org.hk/wp-content/uploads/2018/10/Provoke-01.jpg"></div>
 			<div style="width:300px;height:198px" data-src="https://hkipf.org.hk/wp-content/uploads/2018/09/TimeSpace-01.jpg"></div>
 			<div id="featured_about" style="height: 200vh;"></div>
-			<img style="width:300px;height:198px" src="" data-src="https://hkipf.org.hk/wp-content/uploads/2018/09/Nakahira-Takuma-01.jpg"/>
+			<img src="" data-src="https://hkipf.org.hk/wp-content/uploads/2018/09/Nakahira-Takuma-01.jpg"/>
 			<div style="height: 200vh;">123</div>
-			<img style="width:300px;height:198px" src="" data-src="https://hkipf.org.hk/wp-content/uploads/2018/09/BW-Nostalgia-01.jpg"/>
+			<img src="" data-src="https://hkipf.org.hk/wp-content/uploads/2018/09/BW-Nostalgia-01.jpg"/>
 		</div>
 	</main>
 	
