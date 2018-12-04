@@ -59,20 +59,26 @@ var CurrentPage,ToPage,initPage,section;
 
 
 (function(){
+    
     //
-    // Resize
+    // Global scale if > 1440
     //
-    var resize = function(e){
-        md = new MobileDetect(window.navigator.userAgent);
-
-        // Global scale if > 1440
+    var adjustSize = function(){
         var width = window.innerWidth;
         var roundNumber = Math.round(baseFontRatio * width * fontMultiplier);
         if(roundNumber >= 16) //roundNumber = 16;
             document.documentElement.style.fontSize = roundNumber + 'px';
         else
             document.documentElement.style.fontSize = '';
+    }
 
+    //
+    // Resize
+    //
+    var resize = function(e){
+        md = new MobileDetect(window.navigator.userAgent);
+
+        adjustSize();
     }
     resize();
     addEvent( window , 'resize' , resize );
