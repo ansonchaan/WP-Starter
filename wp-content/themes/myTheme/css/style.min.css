@@ -36,7 +36,6 @@ body .venter_item{position:absolute;top:50%;-webkit-transform:translate3d(0,-50%
 body .underline{text-decoration:underline}
 body .show_on_desktop{display:block}
 body .show_on_mobile{display:none}
-body ::-moz-selection{background:#000;color:#fff}
 body ::selection{background:#000;color:#fff}
 body ::-moz-selection{background:#000;color:#fff}
 body ::-webkit-input-placeholder{color:#000}

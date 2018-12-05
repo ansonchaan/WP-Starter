@@ -552,7 +552,7 @@ var Ajax = function(){
         return data;
     }
     this.updateSiteTitle = function(data){
-        document.querySelector('title').innerHTML = _this.getSiteTitle(data);
+        document.title = _this.getSiteTitle(data);
     }
 
     this.updateURL = function(href){
