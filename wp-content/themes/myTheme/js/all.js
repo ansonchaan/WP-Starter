@@ -382,7 +382,7 @@ var LazyLoad = function(){
 					var __img = _img;
 					var src = __img.getAttribute('data-src');
 
-					if(__img.tagName == 'DIV')
+					if(__img.tagName !== 'IMG')
 						__img.style.backgroundImage = 'url('+src+')';
 					else
 						__img.setAttribute('src',src);
