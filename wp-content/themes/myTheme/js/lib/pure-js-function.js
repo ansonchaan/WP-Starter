@@ -377,11 +377,12 @@ var getPageName = function(){
     var page = window.location.pathname.split('/').filter(Boolean)[1];
     return (page)? page : 'home';
 }
-var Ajax = function(){
+var Ajax = function(options){
 	var _this = this;
     var ignoreString = ['#','/wp-','.pdf','.zip','.rar'];
     var main = document.querySelector('main');
     var done = true;
+	var ignorePage = options.ignorePage.split(',');
 
 	this.initEventToAtag = function(elem){
 		var _this = this;
@@ -465,6 +466,10 @@ var Ajax = function(){
 
     this.checkIfSamePage = function(ignore){
 		if(!ignore){
+			for(var i=0; ignorePage[i]; i++){
+				if(CurrentPage == ignorePage[i])
+					return true;
+			}
 			if(CurrentPage == ToPage){
 				print('Page Detection','red', 'Clicked a Same Page!');
 				return false;

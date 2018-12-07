@@ -30,7 +30,9 @@ var CurrentPage,ToPage,initPage,section;
     ToPage = '';
     print('Current Page','#999',CurrentPage);
 
-    var ajax = new Ajax();
+    var ajax = new Ajax({
+        ignorePage:'singlepage,newssinglepage'
+    });
     initPage = function(){
         var page = (ToPage)? ToPage : CurrentPage;
         
