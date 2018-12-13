@@ -423,79 +423,96 @@ var print = function(state, color, text){
 //
 var mainWrapId = '#mainWrap';
 var getPageName = function(){
-    var page = window.location.pathname.split('/').filter(Boolean)[1];
-    return (page)? page : 'home';
+	var page = window.location.pathname.split('/').filter(Boolean);
+    var lvl1 = page[1] ? decodeURIComponent(page[1]) : 'home';
+    var lvl2 = page[2] ? decodeURIComponent(page[2]) : null;
+    var lvl3 = page[3] ? decodeURIComponent(page[3]) : null;
+    return {
+		lvl1: lvl1,
+		lvl2: lvl2,
+		lvl3: lvl3
+	}
 }
-var Ajax = function(){
+var Ajax = function(options){
 	var _this = this;
     var ignoreString = ['#','/wp-','.pdf','.zip','.rar'];
     var main = document.querySelector('main');
-    var done = true;
+	var ignorePage = options.ignorePage.split(',');
+	this.done = true;
+	this.init = null;
 
-	this.initEventToAtag = function(elem){
-		var _this = this;
-        var a = elem.querySelectorAll('a.page');
-        for(var i=0; a[i]; i++){
-            addEvent(a[i], 'click', function(event){
-                _this.onClick(event, this.href);
-            });
-        }
-    }
+	// this.initEventToAtag = function(elem){
+	// 	var _this = this;
+    //     var a = elem.querySelectorAll('a.page');
+    //     for(var i=0; a[i]; i++){
+    //         addEvent(a[i], 'click', function(event){
+	// 			_this.onClick(event, this.href);
+				
+	// 			if(hasClass(this, 'menu_item')){
+	// 				removeClass(document.querySelectorAll('.menu_item'), 'active');
+	// 				addClass(this, 'active');
+	// 			}
+    //         });
+    //     }
+    // }
 	this.initEventToAtag(document);
     
-    this.onClick = function(event, href){
+    this.onClick = function(event, $this){
         event.preventDefault();
 
         print('','','');
 		print('Current Page','#999',CurrentPage);
 		
-		_this.updateURL(href);
+		_this.updateURL($this.href);
 
-        ToPage = getPageName();
+        ToPage = getPageName().lvl1;
 		print('Going to','#999',ToPage);
 
-		_this.runAjax(href);
+		if(section) section.to(0);
+		var getFrom = $this.getAttribute('data-from') || null;
+		var insertTo = $this.getAttribute('data-to') || null;
+		_this.init = $this.getAttribute('data-init') || null;
+		_this.get($this.href, getFrom, insertTo);
 	}
 
 
-    this.runAjax = function(href, getFrom, insertTo, callback){
-        if(_this.checkIgnoreString(href)){
-			var ignoreDetection = getFrom && insertTo;
+    // this.runAjax = function(href, getFrom, insertTo, callback){
+    //     if(_this.checkIgnoreString(href)){
+	// 		var ignoreDetection = getFrom && insertTo;
 
-            if(_this.checkIfSamePage(ignoreDetection)){
-                if(!ignoreDetection) done = false;
+    //         if(_this.checkIfSamePage(ignoreDetection)){
+    //             if(!ignoreDetection) done = false;
 
-				print('Start Ajax','#999',href);
+	// 			print('Start Ajax','#999',href);
 				
-				_this.onAnimBeforeAjax(getFrom,function(){
-					axios
-						.get(href)
-						.then(function(response){
-							print('Ajax Success','green');
-							CurrentPage = getPageName();
+	// 			_this.onAnimBeforeAjax(getFrom,function(){
+	// 				axios
+	// 					.get(href)
+	// 					.then(function(response){
+	// 						print('Ajax Success','green');
+	// 						CurrentPage = getPageName();
 
-							var data = response.data,
-								html = _this.getPageContent(data,getFrom);
+	// 						var data = response.data,
+	// 							html = _this.getPageContent(data,getFrom);
 
-							if(!getFrom)
-								_this.updateSiteTitle(data);
-							_this.insertHTML(html,insertTo);
+	// 						if(!getFrom)
+	// 							_this.updateSiteTitle(data);
+	// 						_this.insertHTML(html,insertTo);
+	// 						_this.onAnimAfterAjax();
 
-							_this.onAnimAfterAjax();
-
-							if(callback) callback();
-							if(!done){
-								done = true;
-								initPage();
-							}
-						})
-						.catch(function(error){
-							print(error.message,'red',error.stack);
-						});
-				});
-            }
-        }
-	}
+	// 						if(callback) callback();
+	// 						if(!done){
+	// 							done = true;
+	// 							initPage();
+	// 						}
+	// 					})
+	// 					.catch(function(error){
+	// 						print(error.message,'red',error.stack);
+	// 					});
+	// 			});
+    //         }
+    //     }
+	// }
 	
 	this.onAnimBeforeAjax = function(getFrom, func){
 		if(!getFrom)
@@ -514,7 +531,11 @@ var Ajax = function(){
 
     this.checkIfSamePage = function(ignore){
 		if(!ignore){
-			if(CurrentPage == ToPage){
+			for(var i=0; ignorePage[i]; i++){
+				if(CurrentPage.lvl1 == ignorePage[i])
+					return true;
+			}
+			if(CurrentPage.lvl1 == ToPage ){
 				print('Page Detection','red', 'Clicked a Same Page!');
 				return false;
 			}
@@ -573,7 +594,8 @@ var Ajax = function(){
 
         if(to){
 			elem = to;
-        	elem.insertAdjacentHTML('beforeend', html);
+			elem.innerHTML = html;
+        	// elem.insertAdjacentHTML('beforeend', html);
 			to = null;
 		}else{
 			elem = main;
@@ -596,9 +618,63 @@ var Ajax = function(){
 		_this.onClick(event,url);
 	}
 
-    return{
-		get: _this.runAjax
-    }
+    // return{
+	// 	get: _this.runAjax
+    // }
+}
+Ajax.prototype = {
+	get: function(href, getFrom, insertTo, callback){
+		var _this = this;
+		if(_this.checkIgnoreString(href)){
+			var ignoreDetection = getFrom && insertTo;
+
+			if(_this.checkIfSamePage(ignoreDetection)){
+				if(!ignoreDetection || _this.init) _this.done = false;
+
+				print('Start Ajax','#999',href);
+				
+				_this.onAnimBeforeAjax(getFrom,function(){
+					axios
+						.get(href)
+						.then(function(response){
+							print('Ajax Success','green');
+							CurrentPage = getPageName();
+
+							var data = response.data,
+								html = _this.getPageContent(data,getFrom);
+
+							if(!getFrom)
+								_this.updateSiteTitle(data);
+							_this.insertHTML(html,insertTo);
+							_this.onAnimAfterAjax();
+
+							if(callback) callback();
+							if(!_this.done){
+								_this.done = true;
+								initPage();
+							}
+						})
+						.catch(function(error){
+							print(error.message,'red',error.stack);
+						});
+				});
+			}
+		}
+	},
+	initEventToAtag: function(elem){
+		var _this = this;
+		var a = elem.querySelectorAll('a.page');
+		for(var i=0; a[i]; i++){
+			addEvent(a[i], 'click', function(event){
+				_this.onClick(event, this);
+				
+				if(hasClass(this, 'menu_item')){
+					removeClass(document.querySelectorAll('.menu_item'), 'active');
+					addClass(this, 'active');
+				}
+			});
+		}
+	}
 }
 FrameImpulse = (function() {
 
@@ -969,9 +1045,11 @@ var CurrentPage,ToPage,initPage,section;
     ToPage = '';
     print('Current Page','#999',CurrentPage);
 
-    var ajax = new Ajax();
+    var ajax = new Ajax({
+        ignorePage:'singlepage,newssinglepage'
+    });
     initPage = function(){
-        var page = (ToPage)? ToPage : CurrentPage;
+        var page = (ToPage)? ToPage : CurrentPage.lvl1;
         
         if(page == 'home'){
             // get specify content from other page

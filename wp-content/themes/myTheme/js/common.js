@@ -34,7 +34,7 @@ var CurrentPage,ToPage,initPage,section;
         ignorePage:'singlepage,newssinglepage'
     });
     initPage = function(){
-        var page = (ToPage)? ToPage : CurrentPage;
+        var page = (ToPage)? ToPage : CurrentPage.lvl1;
         
         if(page == 'home'){
             // get specify content from other page
