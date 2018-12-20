@@ -38,8 +38,8 @@ var CurrentPage,ToPage,initPage,section;
         
         if(page == 'home'){
             // get specify content from other page
-            // ajax.get(url, get from(id), insert to(id), callback)
-            ajax.get(window.location.pathname+'about/','content','featured_about',
+            // ajax.get(url, {data}, get from(id), insert to(id), callback)
+            ajax.get(window.location.pathname+'about/',{},'content','featured_about',
                 function(){
                     home.initFeaturedAbout();
                 }

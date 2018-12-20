@@ -469,10 +469,13 @@ var Ajax = function(options){
 		print('Going to','#999',ToPage);
 
 		if(section) section.to(0);
-		var getFrom = $this.getAttribute('data-from') || null;
-		var insertTo = $this.getAttribute('data-to') || null;
-		_this.init = $this.getAttribute('data-init') || null;
-		_this.get($this.href, getFrom, insertTo);
+		
+		if($this instanceof Element){
+			var getFrom = $this.getAttribute('data-from') || null;
+			var insertTo = $this.getAttribute('data-to') || null;
+			_this.init = $this.getAttribute('data-init') || null;
+		}
+		_this.get($this.href, {}, getFrom, insertTo);
 	}
 
 
@@ -515,18 +518,20 @@ var Ajax = function(options){
 	// }
 	
 	this.onAnimBeforeAjax = function(getFrom, func){
-		if(!getFrom)
-			TweenMax.to(mainWrapId,.3,{autoAlpha:0,
+		var elem = getFrom? '#'+getFrom : mainWrapId;
+		// if(!getFrom)
+			TweenMax.to(elem,.3,{autoAlpha:0,overwrite:'all',
 				onComplete:function(){
 					func();
 				}
 			});
-		else
-			func();
+		// else
+		// 	func();
 	}
 
-	this.onAnimAfterAjax = function(){
-        TweenMax.to(mainWrapId,.3,{autoAlpha:1});
+	this.onAnimAfterAjax = function(elem){
+		var elem = elem? elem : mainWrapId;
+        TweenMax.to(elem,.3,{autoAlpha:1,overwrite:'all'});
 	}
 
     this.checkIfSamePage = function(ignore){
@@ -595,6 +600,7 @@ var Ajax = function(options){
         if(to){
 			elem = to;
 			elem.innerHTML = html;
+			_this.onAnimAfterAjax(elem);
         	// elem.insertAdjacentHTML('beforeend', html);
 			to = null;
 		}else{
@@ -613,8 +619,8 @@ var Ajax = function(options){
 	}
 	
 	window.onpopstate = function(event) {
-		var url = document.location.toString();
-		print('Back to','black',url);
+		var url = {href:document.location.toString()};
+		print('Back to','black',url.href);
 		_this.onClick(event,url);
 	}
 
@@ -623,19 +629,20 @@ var Ajax = function(options){
     // }
 }
 Ajax.prototype = {
-	get: function(href, getFrom, insertTo, callback){
+	get: function(href, data, getFrom, insertTo, callback){
 		var _this = this;
 		if(_this.checkIgnoreString(href)){
 			var ignoreDetection = getFrom && insertTo;
 
 			if(_this.checkIfSamePage(ignoreDetection)){
 				if(!ignoreDetection || _this.init) _this.done = false;
+				_this.init = null;
 
 				print('Start Ajax','#999',href);
-				
 				_this.onAnimBeforeAjax(getFrom,function(){
+					var params = new URLSearchParams(data);
 					axios
-						.get(href)
+						.post(href,params)
 						.then(function(response){
 							print('Ajax Success','green');
 							CurrentPage = getPageName();
@@ -1053,8 +1060,8 @@ var CurrentPage,ToPage,initPage,section;
         
         if(page == 'home'){
             // get specify content from other page
-            // ajax.get(url, get from(id), insert to(id), callback)
-            ajax.get(window.location.pathname+'about/','content','featured_about',
+            // ajax.get(url, {data}, get from(id), insert to(id), callback)
+            ajax.get(window.location.pathname+'about/',{},'content','featured_about',
                 function(){
                     home.initFeaturedAbout();
                 }
