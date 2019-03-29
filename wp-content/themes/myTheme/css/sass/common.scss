@@ -41,5 +41,11 @@ body{
     :-ms-input-placeholder{ color:#000; }
 
 
+    #mainWrap{
+        &.hide{ 
+            opacity:0; visibility: hidden; 
+        }
+    }
+
     @import './global/scrollbar';
 }

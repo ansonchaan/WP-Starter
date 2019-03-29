@@ -149,17 +149,20 @@ var smoothScroll = function(elem, scrollFunc){
 	
 	// scroll bar padding
 	var padding = 3;
+
+	var isSelf = false;
     
     var onScroll = function(e) {
-	    
-        // Accumulate delta value on each scroll event
-        targetY += e.deltaY * mult;
-		targetX += e.deltaX * mult;
+	    if(isSelf){
+			// Accumulate delta value on each scroll event
+			targetY += e.deltaY * mult;
+			targetX += e.deltaX * mult;
 
-        // Clamp the value so it doesn't go too far up or down
-        // The value needs to be between 0 and -elemHeight
-        targetY = Math.max(-elemHeight, targetY);
-        targetY = Math.min(0, targetY);
+			// Clamp the value so it doesn't go too far up or down
+			// The value needs to be between 0 and -elemHeight
+			targetY = Math.max(-elemHeight, targetY);
+			targetY = Math.min(0, targetY);
+		}
     }
     
     var onAnim = function() {
@@ -180,11 +183,19 @@ var smoothScroll = function(elem, scrollFunc){
         if( scrollFunc )
 			scrollFunc( currentY / elemHeight , currentY , elemHeight );
 		
-		if(fullElemHeight > window.innerHeight)
+		if(fullElemHeight > _this.elem.parentNode.offsetHeight)
 			rePositionScrollBar(currentY);
 
 		lazyLoad.checkAndShowImg();
 	}
+
+	// detect that if hovered scroll container
+	addEvent(_this.elem, 'mouseenter', function(){
+		isSelf = true;
+	});
+	addEvent(_this.elem, 'mouseleave', function(){
+		isSelf = false;
+	});
 	
 	var initScrollBar = function(){
 		_this.oldMouseY = 0;
@@ -199,13 +210,13 @@ var smoothScroll = function(elem, scrollFunc){
 		addEvent(document, 'mouseup', onMouseUpScrollBar);
 
 		_this.scrollBarWrap.appendChild(_this.scrollBar);
-		document.body.appendChild(_this.scrollBarWrap);
+		_this.elem.parentNode.appendChild(_this.scrollBarWrap);
 	}
 
 	var rePositionScrollBar = function(y){
 		var scrollBarHeight = (1-(elemHeight/fullElemHeight))*100;
 		_this.scrollBar.style.height = scrollBarHeight + '%';
-		_this.scrollBarY = (window.innerHeight - (padding * 2) - _this.scrollBar.offsetHeight) * (y/elemHeight) - padding;
+		_this.scrollBarY = (_this.elem.parentNode.offsetHeight - (padding * 2) - _this.scrollBar.offsetHeight) * (y/elemHeight) - padding;
 
 		// setTranslate( _this.scrollBarWrap , 0+'px' , (-y.toFixed(4)) +'px' , 0+'px' );
 		setTranslate( _this.scrollBar , 0+'px' , (-_this.scrollBarY.toFixed(4)) +'px' , 0+'px' );
@@ -221,7 +232,7 @@ var smoothScroll = function(elem, scrollFunc){
 	var onMoveScrollBar = function(e){
 		if(_this.clickedScrollBar){
 			var y = _this.oldMouseY - e.pageY;
-			targetY += y * (fullElemHeight / window.innerHeight);
+			targetY += y * (fullElemHeight / _this.elem.parentNode.offsetHeight);
 
 			targetY = Math.max(-elemHeight, targetY);
 			targetY = Math.min(0, targetY);
@@ -418,8 +429,6 @@ var Ajax = function(options){
 
         ToPage = getPageName().lvl1;
 		print('Going to','#999',ToPage);
-
-		if(section) section.to(0);
 		
 		if($this instanceof Element){
 			var getFrom = $this.getAttribute('data-from') || null;
@@ -586,6 +595,7 @@ Ajax.prototype = {
 			var ignoreDetection = getFrom && insertTo;
 
 			if(_this.checkIfSamePage(ignoreDetection)){
+				if(section) section.to(0);
 				if(!ignoreDetection || _this.init) _this.done = false;
 				_this.init = null;
 
