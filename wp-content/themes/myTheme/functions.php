@@ -600,3 +600,16 @@ function do_browser_detect() {
 	$ua = getBrowser();
 }
 add_action( 'get_header', 'do_browser_detect' );
+
+/**
+	ACF Options Page
+*/
+$args = array(
+	'page_title' => "Site Settings",
+	'menu_title' => "Site Settings",
+	'menu_slug' => 'site-settings',
+	'capability' => 'edit_posts',
+	'redirect' => false
+);
+if(is_admin() && current_user_can( 'administrator' ))
+	acf_add_options_page($args);

@@ -20,8 +20,6 @@
 
 var baseFontRatio = 16 / 1440;
 var fontMultiplier = 0.84375;
-
-var md = new MobileDetect(window.navigator.userAgent);
 var CurrentPage,ToPage,initPage,section;
 
 
@@ -78,8 +76,6 @@ var CurrentPage,ToPage,initPage,section;
     // Resize
     //
     var resize = function(e){
-        md = new MobileDetect(window.navigator.userAgent);
-
         adjustSize();
     }
     resize();

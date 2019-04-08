@@ -12,6 +12,14 @@ window.cancelAnimationFrame = window.cancelAnimationFrame
 	|| function(requestID){clearTimeout(requestID)} //fall back
 	
 
+var isMobile = function(){
+	return window.innerWidth <= 1024;
+}
+var isPhone = function(){
+	return window.innerWidth < 768;
+}
+
+
 	
 //
 // Async loading
