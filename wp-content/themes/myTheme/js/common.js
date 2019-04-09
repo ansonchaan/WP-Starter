@@ -18,21 +18,21 @@
 //   
 */
 
+var _global={}
 var baseFontRatio = 16 / 1440;
 var fontMultiplier = 0.84375;
-var CurrentPage,ToPage,initPage,section;
 
 
-(function(){
-    CurrentPage = getPageName();
-    ToPage = '';
-    print('Current Page','#999',CurrentPage);
+(function(_g){
+    _g.CurrentPage = getPageName();
+    _g.ToPage = '';
+    print('Current Page','#999',_g.CurrentPage);
 
     var ajax = new Ajax({
         ignorePage:'singlepage,newssinglepage'
     });
-    initPage = function(){
-        var page = (ToPage)? ToPage : CurrentPage.lvl1;
+    _g.initPage = function(){
+        var page = (_g.ToPage)? _g.ToPage : _g.CurrentPage.lvl1;
         
         if(page == 'home'){
             // get specify content from other page
@@ -48,18 +48,15 @@ var CurrentPage,ToPage,initPage,section;
             about.init();
         }
     }
-    initPage();
+    _g.initPage();
 
 
     var mainWrap = document.querySelector('#scroll');
     if(mainWrap) 
-        section = new smoothScroll('#scroll', function(s, y, h) {});
-    section.on();
-})();
+        _g.section = new smoothScroll('#scroll', function(s, y, h) {});
+    _g.section.on();
 
 
-(function(){
-    
     //
     // Global scale if > 1440
     //
@@ -80,4 +77,4 @@ var CurrentPage,ToPage,initPage,section;
     }
     resize();
     addEvent( window , 'resize' , resize );
-})();
+})(_global);

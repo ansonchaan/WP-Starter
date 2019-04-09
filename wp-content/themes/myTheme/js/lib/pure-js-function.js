@@ -1,16 +1,36 @@
-//
-// animation frame
-//
-window.requestAnimationFrame = window.requestAnimationFrame
-    || window.mozRequestAnimationFrame
-    || window.webkitRequestAnimationFrame
-    || window.msRequestAnimationFrame
-    || function(f){return setTimeout(f, 1000/60)} // simulate calling code 60 
- 
-window.cancelAnimationFrame = window.cancelAnimationFrame
-    || window.mozCancelAnimationFrame
+(function(w){
+	//
+	// animation frame
+	//
+	w.requestAnimationFrame = w.requestAnimationFrame
+	|| w.mozRequestAnimationFrame
+	|| w.webkitRequestAnimationFrame
+	|| w.msRequestAnimationFrame
+	|| function(f){return setTimeout(f, 1000/60)} // simulate calling code 60 
+
+	w.cancelAnimationFrame = w.cancelAnimationFrame
+	|| w.mozCancelAnimationFrame
 	|| function(requestID){clearTimeout(requestID)} //fall back
-	
+
+	//
+	// URLSearchParams polyfill
+	//
+	w.URLSearchParams = w.URLSearchParams || function (searchString) {
+		var self = this;
+		self.searchString = searchString;
+		self.get = function (name) {
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+			if (results == null) {
+				return null;
+			}
+			else {
+				return decodeURI(results[1]) || 0;
+			}
+		};
+	}
+})(window);
+
+
 
 var isMobile = function(){
 	return window.innerWidth <= 1024;
@@ -158,10 +178,11 @@ var smoothScroll = function(elem, scrollFunc){
 	// scroll bar padding
 	var padding = 3;
 
+	var disable = false;
 	var isSelf = false;
     
     var onScroll = function(e) {
-	    if(isSelf){
+	    if(!disable && isSelf){
 			// Accumulate delta value on each scroll event
 			targetY += e.deltaY * mult;
 			targetX += e.deltaX * mult;
@@ -290,8 +311,8 @@ var smoothScroll = function(elem, scrollFunc){
 	var isOn = false;
 	var on = function(){
 		isOn = true;
-		initScrollBar();
 		refresh();
+		onResize();
 		VirtualScroll.on(onScroll);
 		FrameImpulse.on(onAnim);
 	}
@@ -300,11 +321,10 @@ var smoothScroll = function(elem, scrollFunc){
 		isOn = false;
 		VirtualScroll.off(onScroll);
 		FrameImpulse.off(onAnim);
-		window.removeEventListener("resize", refresh);
 	}
 	
 	var onResize = function(){
-		if( ismobile ){ 
+		if( isMobile() ){ 
 			if(isOn){
 				off();
 				setTranslate( _this.elem , 0+'px' , 0+'px' , 0+'px' );
@@ -315,8 +335,23 @@ var smoothScroll = function(elem, scrollFunc){
 				reset();
 				on();
 			}
+			if(disable)
+				onEnable();
 		}
 	}
+	var onDisable = function(){
+		disable = true;
+	}
+	var onEnable = function(){
+		disable = false;
+	}
+
+	var init = function(){
+		initScrollBar();
+		addEvent(window, 'resize', onResize);
+	}
+	
+	init();
 	
 	return {
 		reset: reset,
@@ -325,7 +360,9 @@ var smoothScroll = function(elem, scrollFunc){
 		set: set,
 		to: to,
 		on: on,
-		off: off
+		off: off,
+		disable: onDisable,
+		enable: onEnable
 	}
 }
 
@@ -431,7 +468,7 @@ var Ajax = function(options){
         event.preventDefault();
 
         print('','','');
-		print('Current Page','#999',CurrentPage);
+		print('Current Page','#999',_global.CurrentPage);
 		
 		_this.updateURL($this.href);
 
@@ -505,10 +542,10 @@ var Ajax = function(options){
     this.checkIfSamePage = function(ignore){
 		if(!ignore){
 			for(var i=0; ignorePage[i]; i++){
-				if(CurrentPage.lvl1 == ignorePage[i])
+				if(_global.CurrentPage.lvl1 == ignorePage[i])
 					return true;
 			}
-			if(CurrentPage.lvl1 == ToPage ){
+			if(_global.CurrentPage.lvl1 == ToPage ){
 				print('Page Detection','red', 'Clicked a Same Page!');
 				return false;
 			}
@@ -603,7 +640,7 @@ Ajax.prototype = {
 			var ignoreDetection = getFrom && insertTo;
 
 			if(_this.checkIfSamePage(ignoreDetection)){
-				if(section) section.to(0);
+				if(_global.section) _global.section.to(0);
 				if(!ignoreDetection || _this.init) _this.done = false;
 				_this.init = null;
 
@@ -614,7 +651,7 @@ Ajax.prototype = {
 						.post(href,params)
 						.then(function(response){
 							print('Ajax Success','green');
-							CurrentPage = getPageName();
+							_global.CurrentPage = getPageName();
 
 							var data = response.data,
 								html = _this.getPageContent(data,getFrom);
@@ -627,7 +664,7 @@ Ajax.prototype = {
 							if(callback) callback();
 							if(!_this.done){
 								_this.done = true;
-								initPage();
+								_global.initPage();
 							}
 						})
 						.catch(function(error){
