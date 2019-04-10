@@ -222,6 +222,7 @@ var smoothScroll = function(elem, scrollFunc){
 	var currentX = 0, currentY = 0;
 	
 	// scroll bar padding
+	var showScrollBar = false;
 	var padding = 3;
 
 	var disable = false;
@@ -243,6 +244,10 @@ var smoothScroll = function(elem, scrollFunc){
     var onAnim = function() {
         // Make sure this works across different browsers (use the shim or something)
 
+		// keep at bottom while resizing
+		if(-targetY > elemHeight)
+			targetY = -elemHeight+1;
+			
         // Get closer to the target value at each frame, using ease. 
         // Other easing methods are also ok.
         currentY += (targetY - currentY) * ease;
@@ -258,8 +263,9 @@ var smoothScroll = function(elem, scrollFunc){
         if( scrollFunc )
 			scrollFunc( currentY / elemHeight , currentY , elemHeight );
 		
-		if(fullElemHeight > _this.elem.parentNode.offsetHeight)
-			rePositionScrollBar(currentY);
+		if(showScrollBar)
+			if(fullElemHeight > _this.elem.parentNode.offsetHeight)
+				rePositionScrollBar(currentY);
 
 		lazyLoad.checkAndShowImg();
 	}
@@ -332,13 +338,15 @@ var smoothScroll = function(elem, scrollFunc){
 			fullElemHeight = _this.elem.getBoundingClientRect().height;
 			elemHeight = _this.elem.getBoundingClientRect().height - _this.elem.parentNode.offsetHeight;
 
-			if(fullElemHeight > window.innerHeight){
-				if(hasClass(_this.scrollBarWrap,'hide'))
-					removeClass(_this.scrollBarWrap, 'hide');
-			}
-			else{
-				if(!hasClass(_this.scrollBarWrap,'hide'))
-					addClass(_this.scrollBarWrap, 'hide');
+			if(showScrollBar){
+				if(fullElemHeight > window.innerHeight){
+					if(hasClass(_this.scrollBarWrap,'hide'))
+						removeClass(_this.scrollBarWrap, 'hide');
+				}
+				else{
+					if(!hasClass(_this.scrollBarWrap,'hide'))
+						addClass(_this.scrollBarWrap, 'hide');
+				}
 			}
 		}
 	}
@@ -392,6 +400,11 @@ var smoothScroll = function(elem, scrollFunc){
 		disable = false;
 	}
 
+	var onShowScrollBar = function(){
+		showScrollBar = true;
+		initScrollBar();
+	}
+
 	var init = function(){
 		initScrollBar();
 		addEvent(window, 'resize', onResize);
@@ -408,7 +421,8 @@ var smoothScroll = function(elem, scrollFunc){
 		on: on,
 		off: off,
 		disable: onDisable,
-		enable: onEnable
+		enable: onEnable,
+		showScrollBar: onShowScrollBar
 	}
 }
 
@@ -528,45 +542,6 @@ var Ajax = function(options){
 		}
 		_this.get($this.href, {}, getFrom, insertTo);
 	}
-
-
-    // this.runAjax = function(href, getFrom, insertTo, callback){
-    //     if(_this.checkIgnoreString(href)){
-	// 		var ignoreDetection = getFrom && insertTo;
-
-    //         if(_this.checkIfSamePage(ignoreDetection)){
-    //             if(!ignoreDetection) done = false;
-
-	// 			print('Start Ajax','#999',href);
-				
-	// 			_this.onAnimBeforeAjax(getFrom,function(){
-	// 				axios
-	// 					.get(href)
-	// 					.then(function(response){
-	// 						print('Ajax Success','green');
-	// 						CurrentPage = getPageName();
-
-	// 						var data = response.data,
-	// 							html = _this.getPageContent(data,getFrom);
-
-	// 						if(!getFrom)
-	// 							_this.updateSiteTitle(data);
-	// 						_this.insertHTML(html,insertTo);
-	// 						_this.onAnimAfterAjax();
-
-	// 						if(callback) callback();
-	// 						if(!done){
-	// 							done = true;
-	// 							initPage();
-	// 						}
-	// 					})
-	// 					.catch(function(error){
-	// 						print(error.message,'red',error.stack);
-	// 					});
-	// 			});
-    //         }
-    //     }
-	// }
 	
 	this.onAnimBeforeAjax = function(getFrom, func){
 		var elem = getFrom? '#'+getFrom : mainWrapId;
@@ -674,10 +649,6 @@ var Ajax = function(options){
 		print('Back to','black',url.href);
 		_this.onClick(event,url);
 	}
-
-    // return{
-	// 	get: _this.runAjax
-    // }
 }
 Ajax.prototype = {
 	get: function(href, data, getFrom, insertTo, callback){
@@ -1128,6 +1099,7 @@ var fontMultiplier = 0.84375;
     var mainWrap = document.querySelector('#scroll');
     if(mainWrap) 
         _g.section = new smoothScroll('#scroll', function(s, y, h) {});
+    _g.section.showScrollBar();
     _g.section.on();
 
 

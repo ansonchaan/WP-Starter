@@ -54,6 +54,7 @@ var fontMultiplier = 0.84375;
     var mainWrap = document.querySelector('#scroll');
     if(mainWrap) 
         _g.section = new smoothScroll('#scroll', function(s, y, h) {});
+    _g.section.showScrollBar();
     _g.section.on();
 
 
