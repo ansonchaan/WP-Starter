@@ -21,6 +21,7 @@
 var _global={}
 var baseFontRatio = 16 / 1440;
 var fontMultiplier = 0.84375;
+var _pointer;
 
 
 (function(_g){
@@ -33,6 +34,10 @@ var fontMultiplier = 0.84375;
     });
     _g.initPage = function(){
         var page = (_g.ToPage)? _g.ToPage : _g.CurrentPage.lvl1;
+        if(_pointer) _pointer.refresh();
+
+        // destroy event
+        home.destroy();
         
         if(page == 'home'){
             // get specify content from other page
@@ -58,6 +63,58 @@ var fontMultiplier = 0.84375;
     _g.section.on();
 
 
+
+     //
+    // pointer
+    var Pointer = function(){
+
+        var _this = this;
+
+        this.init = function(){
+            _this.startHover = false;
+            _this.a = document.querySelectorAll('a.page');
+            _this.pointer = document.createElement('div');
+            _this.circle = document.createElement('div');
+            _this.circle.className = 'circle';
+            _this.pointer.setAttribute('id','pointer');
+            _this.pointer.appendChild(_this.circle);
+
+            _this.initEvent();
+
+            document.body.appendChild(_this.pointer);
+        }
+
+        this.initEvent = function(){
+            addEvent( document, 'mousemove', function(e){
+                if(!isMobile()){
+                    var x = e.pageX;
+                    var y = e.pageY - window.pageYOffset;
+                    if(!_this.startHover){
+                        _this.startHover = true;
+                        addClass(_this.pointer, 'active');
+                        TweenMax.set(_this.pointer,{force3D:true,x:x,y:y});
+                    }
+                    else
+                        TweenMax.to(_this.pointer,.2,{force3D:true,x:x,y:y,ease:Power1.easeOut});
+                }
+            });
+        }
+
+        this.refresh = function(){
+            _this.a = document.querySelectorAll('a.page');
+            _this.initEvent();
+        }
+
+        return{
+            init: _this.init,
+            refresh: _this.refresh
+        }
+    }
+
+
+
+
+
     //
     // Global scale if > 1440
     //
@@ -78,4 +135,5 @@ var fontMultiplier = 0.84375;
     }
     resize();
     addEvent( window , 'resize' , resize );
+    
 })(_global);

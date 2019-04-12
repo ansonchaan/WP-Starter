@@ -309,11 +309,8 @@ var smoothScroll = function(elem, scrollFunc){
 		targetY = y;
 	}
 	var set = function(y){
-		currentY = currentY + y;
-		targetY = currentY;
-		setTranslate( _this.elem , 0+'px' , y+'px' , 0+'px' );
-		
-		setTimeout(function(){idx = section_num;},200);
+		currentY = y;
+		targetY = y;
 	}
 
 	var isOn = false;
@@ -659,4 +656,46 @@ Ajax.prototype = {
 			});
 		}
 	}
+}
+
+
+
+var initMagnetize = function(){
+	var magnetize = document.querySelectorAll('.magnetize:not(.inited)');
+
+	addEvent(document, 'mousemove', function(event) {
+		if(!isMobile()){
+			for(var i=0; magnetize[i]; i++){
+				if(!hasClass(magnetize[i], 'inited'))
+					addClass(magnetize[i], 'inited');
+
+				(function(_this, e) {
+					var n,
+					mouseX = e.pageX, 
+					mouseY = e.pageY, 
+					a = _this,
+					ratio = -.5,
+					dist = 20 * (_this.getAttribute('data-dist') || 3) || 120, 
+					c = a.getBoundingClientRect().left + a.offsetWidth / 2, 
+					u = a.getBoundingClientRect().top + a.offsetHeight / 2, 
+					f = ratio * Math.floor(c - mouseX),
+					h = ratio * Math.floor(u - mouseY);
+					n = a,
+					Math.floor(Math.sqrt(Math.pow(mouseX - (n.getBoundingClientRect().left + n.offsetWidth / 2), 2) + Math.pow(mouseY - (n.getBoundingClientRect().top + n.offsetHeight / 2), 2))) < dist ? (TweenMax.to(a, 1, {
+						force3D:true,
+						y: h,
+						x: f,
+						ease:Power2.easeOut
+					}),
+					addClass(a,'magnet')) : (TweenMax.to(a, .6, {
+						force3D:true,
+						y: 0,
+						x: 0,
+						ease:Power2.easeOut
+					}),
+					removeClass(a,'magnet'))
+				})(magnetize[i], event);
+			};
+		}
+	});
 }

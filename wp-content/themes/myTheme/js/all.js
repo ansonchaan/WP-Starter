@@ -355,11 +355,8 @@ var smoothScroll = function(elem, scrollFunc){
 		targetY = y;
 	}
 	var set = function(y){
-		currentY = currentY + y;
-		targetY = currentY;
-		setTranslate( _this.elem , 0+'px' , y+'px' , 0+'px' );
-		
-		setTimeout(function(){idx = section_num;},200);
+		currentY = y;
+		targetY = y;
 	}
 
 	var isOn = false;
@@ -706,6 +703,48 @@ Ajax.prototype = {
 		}
 	}
 }
+
+
+
+var initMagnetize = function(){
+	var magnetize = document.querySelectorAll('.magnetize:not(.inited)');
+
+	addEvent(document, 'mousemove', function(event) {
+		if(!isMobile()){
+			for(var i=0; magnetize[i]; i++){
+				if(!hasClass(magnetize[i], 'inited'))
+					addClass(magnetize[i], 'inited');
+
+				(function(_this, e) {
+					var n,
+					mouseX = e.pageX, 
+					mouseY = e.pageY, 
+					a = _this,
+					ratio = -.5,
+					dist = 20 * (_this.getAttribute('data-dist') || 3) || 120, 
+					c = a.getBoundingClientRect().left + a.offsetWidth / 2, 
+					u = a.getBoundingClientRect().top + a.offsetHeight / 2, 
+					f = ratio * Math.floor(c - mouseX),
+					h = ratio * Math.floor(u - mouseY);
+					n = a,
+					Math.floor(Math.sqrt(Math.pow(mouseX - (n.getBoundingClientRect().left + n.offsetWidth / 2), 2) + Math.pow(mouseY - (n.getBoundingClientRect().top + n.offsetHeight / 2), 2))) < dist ? (TweenMax.to(a, 1, {
+						force3D:true,
+						y: h,
+						x: f,
+						ease:Power2.easeOut
+					}),
+					addClass(a,'magnet')) : (TweenMax.to(a, .6, {
+						force3D:true,
+						y: 0,
+						x: 0,
+						ease:Power2.easeOut
+					}),
+					removeClass(a,'magnet'))
+				})(magnetize[i], event);
+			};
+		}
+	});
+}
 FrameImpulse = (function() {
 
     var vendors = ['webkit', 'moz'];
@@ -1030,15 +1069,26 @@ var Home = function(){
 
     var init = function(){
         print('Initiated Main Home Page','green');
+
+        addEvent(window, 'resize', resize);
+        resize();
     }
 
     var initFeaturedAbout = function(){
         print('Initiated Featured About','green');
     }
+
+    var resize = function(){
+    }
+    
+    var destroy = function(){
+        window.removeEventListener('resize', resize);
+    }
     
     return{
         init: init,
-        initFeaturedAbout: initFeaturedAbout
+        initFeaturedAbout: initFeaturedAbout,
+        destroy: destroy
     }
 }
 
@@ -1066,6 +1116,7 @@ var home = new Home();
 var _global={}
 var baseFontRatio = 16 / 1440;
 var fontMultiplier = 0.84375;
+var _pointer;
 
 
 (function(_g){
@@ -1078,6 +1129,10 @@ var fontMultiplier = 0.84375;
     });
     _g.initPage = function(){
         var page = (_g.ToPage)? _g.ToPage : _g.CurrentPage.lvl1;
+        if(_pointer) _pointer.refresh();
+
+        // destroy event
+        home.destroy();
         
         if(page == 'home'){
             // get specify content from other page
@@ -1103,6 +1158,58 @@ var fontMultiplier = 0.84375;
     _g.section.on();
 
 
+
+     //
+    // pointer
+    var Pointer = function(){
+
+        var _this = this;
+
+        this.init = function(){
+            _this.startHover = false;
+            _this.a = document.querySelectorAll('a.page');
+            _this.pointer = document.createElement('div');
+            _this.circle = document.createElement('div');
+            _this.circle.className = 'circle';
+            _this.pointer.setAttribute('id','pointer');
+            _this.pointer.appendChild(_this.circle);
+
+            _this.initEvent();
+
+            document.body.appendChild(_this.pointer);
+        }
+
+        this.initEvent = function(){
+            addEvent( document, 'mousemove', function(e){
+                if(!isMobile()){
+                    var x = e.pageX;
+                    var y = e.pageY - window.pageYOffset;
+                    if(!_this.startHover){
+                        _this.startHover = true;
+                        addClass(_this.pointer, 'active');
+                        TweenMax.set(_this.pointer,{force3D:true,x:x,y:y});
+                    }
+                    else
+                        TweenMax.to(_this.pointer,.2,{force3D:true,x:x,y:y,ease:Power1.easeOut});
+                }
+            });
+        }
+
+        this.refresh = function(){
+            _this.a = document.querySelectorAll('a.page');
+            _this.initEvent();
+        }
+
+        return{
+            init: _this.init,
+            refresh: _this.refresh
+        }
+    }
+
+
+
+
+
     //
     // Global scale if > 1440
     //
@@ -1123,4 +1230,5 @@ var fontMultiplier = 0.84375;
     }
     resize();
     addEvent( window , 'resize' , resize );
+    
 })(_global);
