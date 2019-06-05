@@ -306,7 +306,8 @@ var smoothScroll = function(elem, scrollFunc){
 	}
 
 	var to = function(y){
-		targetY = y;
+		elemHeight = _this.elem.getBoundingClientRect().height - _this.elem.parentNode.offsetHeight;
+		targetY = Math.max(-elemHeight, y);
 	}
 	var set = function(y){
 		currentY = y;
@@ -440,11 +441,12 @@ var print = function(state, color, text){
 // init Ajax
 //
 var mainWrapId = '#mainWrap';
+var subDir = 'name';
 var getPageName = function(){
-	var page = window.location.pathname.split('/').filter(Boolean);
-    var lvl1 = page[1] ? decodeURIComponent(page[1]) : 'home';
-    var lvl2 = page[2] ? decodeURIComponent(page[2]) : null;
-    var lvl3 = page[3] ? decodeURIComponent(page[3]) : null;
+	var page = window.location.pathname.split('/').filter(function(a){return a.indexOf(subDir) < 0}).filter(Boolean);
+    var lvl1 = page[0] ? decodeURIComponent(page[0]) : 'home';
+    var lvl2 = page[1] ? decodeURIComponent(page[1]) : null;
+	var lvl3 = page[2] ? decodeURIComponent(page[2]) : null;
     return {
 		lvl1: lvl1,
 		lvl2: lvl2,
@@ -491,7 +493,7 @@ var Ajax = function(options){
 			var insertTo = $this.getAttribute('data-to') || null;
 			_this.init = $this.getAttribute('data-init') || null;
 		}
-		_this.get($this.href, {}, getFrom, insertTo);
+		_this.get($this, {}, getFrom, insertTo);
 	}
 	
 	this.onAnimBeforeAjax = function(getFrom, func){
@@ -602,13 +604,18 @@ var Ajax = function(options){
 	}
 }
 Ajax.prototype = {
-	get: function(href, data, getFrom, insertTo, callback){
+	get: function(elem, data, getFrom, insertTo, callback){
 		var _this = this;
+		var href = (elem instanceof Element) ? elem.href : elem;
 		if(_this.checkIgnoreString(href)){
 			var ignoreDetection = getFrom && insertTo;
 
 			if(_this.checkIfSamePage(ignoreDetection)){
-				if(_global.section) _global.section.to(0);
+				if(_global.section){
+					if(elem instanceof Element)
+						if(!hasClass(elem,'disableTo'))
+							_global.section.to(0);
+				}
 				if(!ignoreDetection || _this.init) _this.done = false;
 				_this.init = null;
 

@@ -25,9 +25,23 @@
 $defaultFont: 'TecoSansStencil';
 
 
-h1{  }
+@mixin h1($fontsize:34, $lineHeight: 48){ font-size:rem-calc($fontsize); line-height:rem-calc($lineHeight); }
+
+h1, .h1{ @include h1; }
+
 h2{  }
 h3{  }
 h4{  }
 h5{  }
 h6{  }
+
+
+// tablet
+@media only screen and (max-width: $tablet){
+    @include h1(22,34);
+}
+
+
+// mobile
+@media only screen and (max-width: $mobile){
+}
