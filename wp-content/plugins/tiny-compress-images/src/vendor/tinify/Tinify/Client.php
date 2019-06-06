@@ -20,6 +20,17 @@ class Client {
     }
 
     function __construct($key, $appIdentifier = NULL, $proxy = NULL) {
+        $curl = curl_version();
+
+        if (!($curl["features"] & CURL_VERSION_SSL)) {
+            throw new ClientException("Your curl version does not support secure connections");
+        }
+
+        if ($curl["version_number"] < 0x071201) {
+            $version = $curl["version"];
+            throw new ClientException("Your curl version ${version} is outdated; please upgrade to 7.18.1 or higher");
+        }
+
         $userAgent = join(" ", array_filter(array(self::userAgent(), $appIdentifier)));
 
         $this->options = array(
@@ -107,6 +118,18 @@ class Client {
                     Tinify::setCompressionCount(intval($headers["compression-count"]));
                 }
 
+                if ( isset( $headers["compression-count-remaining"] ) ) {
+                    Tinify::setRemainingCredits( intval( $headers["compression-count-remaining"] ) );
+                }
+
+                if ( isset( $headers["paying-state"] ) ) {
+                    Tinify::setPayingState( $headers["paying-state"] );
+                }
+
+                if ( isset( $headers["email-address"] ) ) {
+                    Tinify::setEmailAddress( $headers["email-address"] );
+                }
+
                 $isJson = false;
                 if (isset($headers["content-type"])) {
                     /* Parse JSON response bodies. */
@@ -133,7 +156,12 @@ class Client {
 
                 if ($isError) {
                     if ($retries > 0 && $status >= 500) continue;
-                    throw Exception::create($body->message, $body->error, $status);
+                    /* When the key doesn't exist a 404 response is given. */
+                    if ($status == 404) {
+                        throw Exception::create(null, null, $status);
+                    } else {
+                        throw Exception::create($body->message, $body->error, $status);
+                    }
                 }
 
                 return (object) array("body" => $body, "headers" => $headers);

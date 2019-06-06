@@ -441,7 +441,7 @@ var print = function(state, color, text){
 // init Ajax
 //
 var mainWrapId = '#mainWrap';
-var subDir = 'name';
+var subDir = 'wpstarter';
 var getPageName = function(){
 	var page = window.location.pathname.split('/').filter(function(a){return a.indexOf(subDir) < 0}).filter(Boolean);
     var lvl1 = page[0] ? decodeURIComponent(page[0]) : 'home';

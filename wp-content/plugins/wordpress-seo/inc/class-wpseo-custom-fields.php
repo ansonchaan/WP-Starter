@@ -6,18 +6,21 @@
  */
 
 /**
- * WPSEO_Custom_Fields
+ * WPSEO_Custom_Fields.
  */
 class WPSEO_Custom_Fields {
+
 	/**
-	 * @var array Cache the custom fields.
+	 * Custom fields cache.
+	 *
+	 * @var array
 	 */
 	protected static $custom_fields = null;
 
 	/**
 	 * Retrieves the custom field names as an array.
 	 *
-	 * @see WordPress core: wp-admin/includes/template.php. Reused query from it.
+	 * @link WordPress core: wp-admin/includes/template.php. Reused query from it.
 	 *
 	 * @return array The custom fields.
 	 */
@@ -29,13 +32,14 @@ class WPSEO_Custom_Fields {
 			return self::$custom_fields;
 		}
 
+		self::$custom_fields = array();
+
 		/**
 		 * Filters the number of custom fields to retrieve for the drop-down
 		 * in the Custom Fields meta box.
 		 *
 		 * @param int $limit Number of custom fields to retrieve. Default 30.
 		 */
-		self::$custom_fields = array();
 		$limit  = apply_filters( 'postmeta_form_limit', 30 );
 		$sql    = "SELECT DISTINCT meta_key
 			FROM $wpdb->postmeta
