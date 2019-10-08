@@ -199,7 +199,7 @@ var smoothScroll = function(elem, scrollFunc){
         // Make sure this works across different browsers (use the shim or something)
 
 		// keep at bottom while resizing
-		if(-targetY > elemHeight)
+		if(-targetY > elemHeight && targetY < 0)
 			targetY = -elemHeight+1;
 			
         // Get closer to the target value at each frame, using ease. 
